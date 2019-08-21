@@ -17,10 +17,8 @@
 
 #define eeprom_is_busy() (EECR & (1 << EEPE))
 
-volatile uint8_t ee_high_byte = 0;
-volatile uint8_t ee_high_adress = 0;
-
-uint8_t ee_data_adress = DATA_START_ADRESS;
+static volatile uint8_t ee_high_byte = 0;
+static volatile uint8_t ee_high_adress = 0;
 
 uint8_t eeprom_read(uint8_t adress) {
     while(eeprom_is_busy());
@@ -74,6 +72,7 @@ uint8_t eeprom_parse_data(uint8_t adress) {
 }
 
 uint8_t eeprom_get_morse_code() {
+    static uint8_t ee_data_adress = DATA_START_ADRESS;
     uint8_t data;
     do {
         data = eeprom_parse_data(ee_data_adress);
