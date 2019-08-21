@@ -7,12 +7,13 @@ inline void input_init() {
 }
 
 void wait_for_input() {
-    PCMSK |= (1 << PCINT2);
-    set_sleep_mode(SLEEP_MODE_PWR_DWN)
+    PORTB |= (1 << INPUT_PIN); //Kein externer Pullup
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
     sleep_bod_disable();
-    sei();
+    PCMSK |= (1 << PCINT2); //Keine Race-Condition
     sleep_cpu();
     sleep_disable();
     PCMSK &= ~(1 << PCINT2);
+    PORTB &= ~(1 << INPUT_PIN);
 }
