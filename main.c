@@ -18,9 +18,9 @@
 
 extern uint16_t battery_level;
 
-volatile uint8_t color = 0;
-volatile uint8_t morse_code = 0;
-volatile uint8_t morse_code_finished = TRUE;
+static volatile uint8_t color = 0;
+static volatile uint8_t morse_code = 0;
+static volatile uint8_t morse_code_finished = TRUE;
 
 ISR(WDT_vect) {
     static uint8_t wdt_counter = 0;
@@ -57,13 +57,12 @@ ISR(WDT_vect) {
     }
 }
 
-uint8_t main(void) {
+int main(void) {
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
     wdt_set(MS500);
     input_init();
     battery_init();
-    uint8_t counter;
-    uint8_t data;
+    uint16_t counter;
     sei();
     while(1) {
         wait_for_input();
@@ -75,19 +74,23 @@ uint8_t main(void) {
             sleep_disable();
         }
         if(check_for_calibration() == CALIBRATION_NEEDED) {
+            cli();
             eeprom_write_word(battery_level, BATTERY_CALIBRATION_LOW_ADRESS);
+            sei();
             set_led(GREEN);
         } else {
             counter = eeprom_read_word(COUNTER_LOW_ADRESS);
             if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS) || counter == COUNTER_MAX) { //Zu geringe Spannung oder Zähler voll
                 color = RED;
             } else {
+                cli();
                 eeprom_write_word(counter++, COUNTER_LOW_ADRESS);
+                sei();
                 color = GREEN;
             }
             do {
                 morse_code = eeprom_get_morse_code();
-                if(morse_code = END_OF_DATA) {
+                if(morse_code == END_OF_DATA) {
                     break;
                 }
                 morse_code_finished = FALSE;
