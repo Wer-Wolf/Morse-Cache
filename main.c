@@ -16,14 +16,16 @@
 #define DIT 1
 #define DAH 3
 
+extern uint16_t battery_level;
+
 volatile uint8_t color = 0;
 volatile uint8_t morse_code = 0;
-uint8_t wdt_counter = 0;
-uint8_t wdt_cycles_on = 0;
-uint8_t wdt_cycles_off = 0;
 volatile uint8_t morse_code_finished = TRUE;
 
 ISR(WDT_vect) {
+    static uint8_t wdt_counter = 0;
+    static uint8_t wdt_cycles_on = 0;
+    static uint8_t wdt_cycles_off = 0;
     if(wdt_counter == 0) {
         if(morse_code & (1 << 0)) { //dah
             wdt_cycles_on = DAH;
