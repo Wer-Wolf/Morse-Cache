@@ -1,0 +1,74 @@
+1. Features:
+    - Ausgeben einer Morsesequenz aus maximal 51 Nummern.
+
+    - Auslösung durch Magneten
+
+    - Konfigurierbarer Batteriewarner
+
+    - Benutzerzähler bis 65536 Besucher (nicht aktiv wenn Batterie schwach)
+
+    - Niedriger Platz- und Stromverbrauch
+
+    - Läuft mit 2x AA oder 2x AAA Batterien
+
+    - Perfekt für Multicaches
+
+1. Benutzung:
+
+    - Auslösen:
+        1. Magneten über den Magnetschalter (langes Bauteil) halten.
+
+        2. Morsesequenz läuft, Magnet entfernen.
+
+        3. Nach Ende der Morsesequenz ist das Gerät wieder einsatzbereit.
+
+    - Farbe der LED:
+        - Grün: Normale Farbe der LED.
+
+        - Rot: Batterie niedrig, Batterie sollte gewechselt werden.
+               (Am bessten im Listing darauf hinweißen)
+
+2. Wartung
+
+    - Kalibrierung der Grenze für die Batteriewarnung:
+        1. Schaltung mit stabiler Spannungsquelle verbinden.
+           (dessen Spannung stellt die neue Grenze da, ab der die Batterie als "leer" gilt)
+        
+        2. Halten des Kalibrierungstasters bei gleichzeitigem Auslösen des Magnetschalters.
+
+        3. Sollte ein Morsecode ausgegeben werden, 2. nach Ende der Ausgabe wiederholen.
+           (erst Taster halten, danach Magnetschalter auslösen)
+
+        4. Taster loslassen wenn LED durchweg Grün leuchtet und Magnetschalter nochmals auslösen.
+           (Die Morsesequenz läuft dadurch "als Test" nochmals ab)
+
+        5. Gerät ist einsatzbereit.
+
+    - Auslesen des Besucherzählers/Ändern der Morsesequenz:
+
+        - Bis jetzt nur mit Programmieradapter möglich. :-(
+          (Lösung in Arbeit)
+            --> Genaueres bei "Entwickler"
+
+3. Entwickler
+
+    - Morsezeichen:
+
+        - Adressen:
+
+            Start: 0x01
+            Ende (maximal): 0x3B
+
+            - Die Zeichenkette muss (spätestens bei 0x3B) mit einem 0xFF abgeschlossen werden
+            - Nur die Nummern 0x00 bis 0x09 (0-9) werden aktzeptiert
+
+    - Benutzerzähler:
+
+        - Wird bei jedem Auslösen des Magnetschalters inkrementiert
+          --> Overflow möglich (Lösung in Arbeit)
+
+        Adressen:
+
+            - Highbyte: 0x3F
+            - Lowbyte: 0x3E
+
