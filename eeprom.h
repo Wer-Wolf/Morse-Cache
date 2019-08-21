@@ -86,15 +86,19 @@ uint8_t eeprom_get_morse_code() {
 }
 
 /*
-Morse-Code Format:
+Format:
 
-. = dit (0)
-_ = dah (1)
+0 = dit (.)
+1 = dah (_)
 
-. . _ _ _ _ _ . = 9
+Beispiel:
+0 0 1 1 1 1 1 0 = 9
+    ^
+    Morsecode (. . . _ _ _ _ .)
+         ^
+         Abschluss des Zeichens (gehöhrt nicht mehr zum Morsecode)
 
 - Von rechts lesen, danach um 1 nach rechts schieben
 
 - Ende wenn gleich 1
-
 */
