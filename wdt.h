@@ -9,16 +9,11 @@
 #define S4 32
 #define S8 33
 
+#define wdt_on()  WDTCR |= (1 << WDTIE); //ISR!
+#define wdt_off() WDTCR &= ~(1 << WDTIE);
+
 inline void wdt_set(uint8_t time) {
     wdt_reset(); //Definierter WDT-Stand
     WDTCR |= (1 << WDCE); //KEINE Interrupts!
     WDTCR |= time;
-}
-
-inline void wdt_on() {
-    WDTCR |= (1 << WDTIE); //ISR!
-}
-
-inline void wdt_off() {
-    WDTCR &= ~(1 << WDTIE);
 }
