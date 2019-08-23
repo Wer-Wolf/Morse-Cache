@@ -3,7 +3,6 @@
 
 #define CALIBRATION_NEEDED 0
 #define NO_CALIBRATION 1
-#define BATTERY_BUSY 2
 
 #define battery_is_busy() (ADCSRA & (1 << ADSC)) //Wahr solange Messung läuft
 
@@ -12,7 +11,7 @@ uint16_t battery_level = 0;
 ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
     battery_level = ADCL;
-    battery_level |= (ADCH << 8);
+    battery_level |= ((uint16_t) ADCH << 8);
     ADCSRA &= ~(1 << ADEN);
     PRR |= (1 << PRADC);
 }
