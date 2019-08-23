@@ -33,16 +33,14 @@ void battery_start_measuring() {
     }
 }
 
-uint8_t check_for_calibration() {
-    if(!battery_is_busy()) { //Messung wird nicht unterbrochen
-        DDRB &= ~(1 << PULLUP_ENABLE_PIN);
-        if(PINB & (1 << PULLUP_ENABLE_PIN)) {
-            return CALIBRATION_NEEDED;
-        } else {
-            return NO_CALIBRATION;
-        }
-        DDRB |= (1 << PULLUP_ENABLE_PIN);
+uint8_t check_for_calibration() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
+    PORTB &= ~(1 << PULLUP_ENABLE_PIN); //Just in case
+    DDRB &= ~(1 << PULLUP_ENABLE_PIN);
+    uint8_t temp = PINB & (1 << PULLUP_ENABLE_PIN);
+    DDRB |= (1 << PULLUP_ENABLE_PIN);
+    if(temp) {
+        return CALIBRATION_NEEDED;
     } else {
-        return BATTERY_BUSY;
+        return NO_CALIBRATION;
     }
 }
