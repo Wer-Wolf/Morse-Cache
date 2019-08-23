@@ -10,8 +10,8 @@
 #include "../lib/battery.h"
 #include "../lib/led.h"
 
-#define FALSE 0
-#define TRUE 1
+#define FINISHED 0
+#define RUNNING 1
 
 #define DIT 1
 #define DAH 3
@@ -20,7 +20,7 @@ extern uint16_t battery_level;
 
 static volatile uint8_t color = 0;
 static volatile uint8_t morse_code = 0;
-static volatile uint8_t morse_code_finished = TRUE;
+static volatile uint8_t morse_code_status = FINISHED;
 
 ISR(WDT_vect) {
     static uint8_t wdt_counter = 0;
@@ -47,7 +47,7 @@ ISR(WDT_vect) {
     }
     if(wdt_counter > wdt_cycles_on + wdt_cycles_off) {
         if(wdt_cycles_off == DAH) {
-            morse_code_finished = TRUE;
+            morse_code_status = FINISHED;
             wdt_off();
         } else {
             wdt_counter = 0;
@@ -93,9 +93,9 @@ int main(void) {
                 if(morse_code == END_OF_DATA) {
                     break;
                 }
-                morse_code_finished = FALSE;
+                morse_code_status = RUNNING;
                 wdt_on();
-                while(morse_code_finished != TRUE) {
+                while(morse_code_status != FINISHED) {
                     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
                     sleep_enable();
                     sleep_cpu();
