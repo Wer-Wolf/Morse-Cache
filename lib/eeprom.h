@@ -15,10 +15,14 @@
 
 #define COUNTER_MAX 0xFFFF
 
+#define FALSE 0
+#define TRUE 1
+
 #define eeprom_is_busy() (EECR & (1 << EEPE))
 
 static volatile uint8_t ee_high_byte = 0;
 static volatile uint8_t ee_high_adress = 0;
+volatile uint8_t ee_interrupt_pending = FALSE;
 
 uint8_t eeprom_read(uint8_t adress) {
     while(eeprom_is_busy());
@@ -38,6 +42,7 @@ void eeprom_write(uint8_t adress, uint8_t data) {
 ISR(EE_RDY_vect) {
     eeprom_write(ee_high_byte, ee_high_adress);
     EECR &= ~(1 << EERIE); //Power-Down
+    ee_interrupt_pending = FALSE;
 }
 
 uint16_t eeprom_read_word(uint8_t adress) {
@@ -48,10 +53,12 @@ uint16_t eeprom_read_word(uint8_t adress) {
 }
 
 void eeprom_write_word(uint16_t word, uint8_t adress) { //Interrups zuvor abschalten
+    while(ee_interrupt_pending == TRUE); //Vermeidet Race-Condition
     ee_high_adress = adress++; //Wort brauch ZWEI Adressen!
     ee_high_byte = (uint8_t) (word >> 8);
-    EECR |= (1 << EERIE); //Idle/ADC-Mode
     eeprom_write((uint8_t) word, adress);
+    EECR |= (1 << EERIE); //Idle/ADC-Mode
+    ee_interrupt_pending = TRUE;
 } //Interrupts wieder einschalten*/
 
 uint8_t convert_data_to_morse(uint8_t data) {
