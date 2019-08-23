@@ -1,0 +1,9 @@
+#Ignore compiler output
+/source/*.o
+/source/*.elf
+/source/*.hex
+
+#other files
+doc8126.pdf
+Storie.txt
+/Compilerfehler/*
