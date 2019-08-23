@@ -34,7 +34,7 @@ void battery_start_measuring() {
 }
 
 uint8_t check_for_calibration() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
-    PORTB &= ~(1 << PULLUP_ENABLE_PIN); //Just in case
+    PORTB &= ~(1 << PULLUP_ENABLE_PIN); //Falls gerade eine Messung läuft
     DDRB &= ~(1 << PULLUP_ENABLE_PIN);
     uint8_t temp = PINB & (1 << PULLUP_ENABLE_PIN);
     DDRB |= (1 << PULLUP_ENABLE_PIN);
