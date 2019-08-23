@@ -2,9 +2,7 @@
 
 EMPTY_INTERRUPT(PCINT0_vect);
 
-inline void input_init() {
-    GIMSK |= (1 << PCIE);
-}
+#define input_init() GIMSK |= (1 << PCIE)
 
 void wait_for_input() {
     PORTB |= (1 << INPUT_PIN); //Kein externer Pullup
