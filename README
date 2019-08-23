@@ -31,7 +31,7 @@
 2. Maintenance:
 
     - Calibration of the limit for the battery warning:
-        1. Connect the circuit to a stable voltage source.
+        1. Connect the circuit to a stable voltage source between 2,2V and 2,7V.
            (whose voltage sets the new limit, from which the battery is considered "empty")
         
         2. Holding the calibration button while triggering the magnetic switch.
@@ -105,7 +105,7 @@
 2. Wartung:
 
     - Kalibrierung der Grenze für die Batteriewarnung:
-        1. Schaltung mit stabiler Spannungsquelle verbinden.
+        1. Schaltung mit stabiler Spannungsquelle zwichen 2,2V und 2,7V verbinden.
            (dessen Spannung stellt die neue Grenze da, ab der die Batterie als "leer" gilt)
         
         2. Halten des Kalibrierungstasters bei gleichzeitigem Auslösen des Magnetschalters.
