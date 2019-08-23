@@ -4,11 +4,11 @@
 #include <avr/wdt.h>
 #include <avr/fuse.h>
 
-#include "wdt.h"
-#include "eeprom.h"
-#include "input.h"
-#include "battery.h"
-#include "led.h"
+#include "../lib/wdt.h"
+#include "../lib/eeprom.h"
+#include "../lib/input.h"
+#include "../lib/battery.h"
+#include "../lib/led.h"
 
 #define FALSE 0
 #define TRUE 1
