@@ -46,6 +46,14 @@
 
         5. Device is ready for use.
 
+    - Updating the device firmware:
+        --> Only possible with programming adapter
+        1. Check www.github.com/Wer-Wolf/Morse-Cache/releases for new version.
+
+        2. Downloading the newest version (.zip).
+
+        3. Extract and flash .hex file with programming adapter.
+
     - Reading the use-counter / Changing the Morse sequence:
 
         - Up to now only possible with programming adapter. :-(
@@ -53,6 +61,11 @@
             -> See "Developer" for details
 
 3. Developer:
+
+    - Fuses:
+        -hfuse: 0xFD
+
+        -lfuse: 0x2A
 
     - Morsecode:
 
@@ -122,6 +135,14 @@
 
         5. Gerät ist einsatzbereit.
 
+    - Update der Firmware:
+        --> Nur mit Programmieradapter möglich
+        1. Auf www.github.com/Wer-Wolf/Morse-Cache/releases nach neuerer Version schauen.
+
+        2. Download der neusten Version (.zip).
+
+        3. Extrahieren und .hex-Datei mit Programmieradapter flashen.
+
     - Auslesen des Besucherzählers/Ändern der Morsesequenz:
 
         - Bis jetzt nur mit Programmieradapter möglich. :-(
@@ -129,6 +150,11 @@
             --> Genaueres bei "Entwickler"
 
 3. Entwickler:
+
+    - Fuses:
+        -hfuse: 0xFD
+
+        -lfuse: 0x2A
 
     - Morsezeichen:
 
