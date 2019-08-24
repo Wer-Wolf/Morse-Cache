@@ -14,6 +14,6 @@
 
 inline void wdt_set(uint8_t time) {
     wdt_reset(); //Definierter WDT-Stand
-    WDTCR |= (1 << WDCE); //KEINE Interrupts!
+    WDTCR |= (1 << WDCE); //Muss atomar sein
     WDTCR |= time;
 }
