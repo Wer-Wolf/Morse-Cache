@@ -25,7 +25,7 @@
 
 static volatile uint8_t ee_high_byte = 0;
 static volatile uint8_t ee_high_adress = 0;
-volatile uint8_t ee_interrupt_pending = FALSE;
+static volatile uint8_t ee_interrupt_pending = FALSE;
 
 //Das Aufrufen einer der Funktionen darf nur erfolgen, wenn kein EE-Interrupt aussteht
 
