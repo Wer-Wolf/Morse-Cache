@@ -31,9 +31,9 @@ static volatile uint8_t ee_interrupt_pending = FALSE;
 
 uint8_t eeprom_read(uint8_t adress) {
     while(ee_interrupt_is_pending());
-    while(eeprom_is_busy());
     uint8_t sreg_temp = SREG;
     cli();
+    while(eeprom_is_busy());
     EEARL = adress;
     EECR |= (1 << EERE);
     SREG = sreg_temp;
@@ -42,9 +42,9 @@ uint8_t eeprom_read(uint8_t adress) {
 
 void eeprom_write(uint8_t adress, uint8_t data) {
     while(ee_interrupt_is_pending());
-    while(eeprom_is_busy());
     uint8_t sreg_temp = SREG;
     cli();
+    while(eeprom_is_busy());
     EEARL = adress;
     EEDR = data;
     EECR |= (1 << EEMPE);
