@@ -16,7 +16,7 @@
 #define DAH 3
 
 FUSES = {
-    .low = (FUSE_EESAVE),
+    .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
     .high = (FUSE_BODLEVEL0),
 };
 
