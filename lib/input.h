@@ -1,3 +1,5 @@
+#include <avr/interrupt.h>
+
 #define INPUT_PIN PB2 //PCINT2
 
 EMPTY_INTERRUPT(PCINT0_vect);

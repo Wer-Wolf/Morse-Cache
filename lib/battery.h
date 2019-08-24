@@ -1,3 +1,5 @@
+#include <avr/interrupt.h>
+
 #define PULLUP_ENABLE_PIN PB4
 #define ADC_INPUT_PIN PB3
 

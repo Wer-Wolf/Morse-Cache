@@ -1,3 +1,6 @@
+#include <avr/wdt.h>
+#include <util/atomic.h> //-std=gnu99
+
 #define MS16 0
 #define MS32 1
 #define MS64 2
@@ -13,7 +16,9 @@
 #define wdt_off() WDTCR &= ~(1 << WDTIE);
 
 inline void wdt_set(uint8_t time) {
-    wdt_reset(); //Definierter WDT-Stand
-    WDTCR |= (1 << WDCE); //Muss atomar sein
-    WDTCR |= time;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        wdt_reset(); //Definierter WDT-Stand
+        WDTCR |= (1 << WDCE);
+        WDTCR |= time;
+    }
 }

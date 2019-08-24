@@ -1,4 +1,5 @@
 #include <util/atomic.h> //-std=gnu99
+#include <avr/interrupt.h>
 
 #define DIRTY_BIT_ADRESS 0x00
 
