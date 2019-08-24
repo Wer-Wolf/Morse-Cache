@@ -1,4 +1,4 @@
-
+#include <util/atomic.h> //-std=gnu99
 
 #define DIRTY_BIT_ADRESS 0x00
 
@@ -31,25 +31,23 @@ static volatile uint8_t ee_interrupt_pending = FALSE;
 
 uint8_t eeprom_read(uint8_t adress) {
     while(ee_interrupt_is_pending());
-    uint8_t sreg_temp = SREG;
-    cli();
-    while(eeprom_is_busy());
-    EEARL = adress;
-    EECR |= (1 << EERE);
-    SREG = sreg_temp;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        while(eeprom_is_busy());
+        EEARL = adress;
+        EECR |= (1 << EERE);
+    }
     return EEDR;
 }
 
 void eeprom_write(uint8_t adress, uint8_t data) {
     while(ee_interrupt_is_pending());
-    uint8_t sreg_temp = SREG;
-    cli();
-    while(eeprom_is_busy());
-    EEARL = adress;
-    EEDR = data;
-    EECR |= (1 << EEMPE);
-    EECR |= (1 << EEPE);
-    SREG = sreg_temp;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        while(eeprom_is_busy());
+        EEARL = adress;
+        EEDR = data;
+        EECR |= (1 << EEMPE);
+        EECR |= (1 << EEPE);
+    }
 }
 
 ISR(EE_RDY_vect) {
@@ -67,13 +65,13 @@ uint16_t eeprom_read_word(uint8_t adress) {
 
 void eeprom_write_word(uint16_t word, uint8_t adress) {
     while(ee_interrupt_is_pending()); //Vermeidet Race-Condition
-    cli();
-    ee_high_adress = adress++; //Wort brauch ZWEI Adressen!
-    ee_high_byte = (uint8_t) (word >> 8);
-    eeprom_write((uint8_t) word, adress);
-    EECR |= (1 << EERIE); //Idle/ADC-Mode
-    ee_interrupt_pending = TRUE;
-    sei(); //Interrupts werden immer eingeschaltet!
+    ATOMIC_BLOCK(ATOMIC_FORCEON) {
+        ee_high_adress = adress++; //Wort brauch ZWEI Adressen!
+        ee_high_byte = (uint8_t) (word >> 8);
+        eeprom_write((uint8_t) word, adress);
+        EECR |= (1 << EERIE); //Idle/ADC-Mode
+        ee_interrupt_pending = TRUE;
+    } //Interrupts werden immer eingeschaltet!
 }
 
 uint8_t convert_data_to_morse(uint8_t data) {
