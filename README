@@ -1,5 +1,7 @@
 1. Features:
-    - Output a Morsecode sequence consisting of a maximum of 51 numbers.
+    - Output a Morsecode sequence consisting of a maximum of 51 numbers
+
+    - Preservation of the Morsecode sequence through firmware updates
 
     - can be triggered by magnets
 
@@ -74,6 +76,8 @@
 
 1. Features:
     - Ausgeben einer Morsesequenz aus maximal 51 Nummern.
+
+    - Beibehalten der Morsesequenz nach Firmwareupdates
 
     - Auslösung durch Magneten
 
