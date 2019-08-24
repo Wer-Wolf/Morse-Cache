@@ -74,18 +74,14 @@ int main(void) {
             sleep_disable();
         }
         if(check_for_calibration() == CALIBRATION_NEEDED) {
-            cli();
             eeprom_write_word(battery_level, BATTERY_CALIBRATION_LOW_ADRESS);
-            sei();
             set_led(GREEN);
         } else {
             counter = eeprom_read_word(COUNTER_LOW_ADRESS);
             if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS) || counter == COUNTER_MAX) { //Zu geringe Spannung oder Zähler voll
                 color = RED;
             } else {
-                cli();
                 eeprom_write_word(counter++, COUNTER_LOW_ADRESS);
-                sei();
                 color = GREEN;
             }
             do {
