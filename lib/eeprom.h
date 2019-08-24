@@ -1,3 +1,5 @@
+
+
 #define DIRTY_BIT_ADRESS 0x00
 
 #define DATA_START_ADRESS 0x01
@@ -19,30 +21,41 @@
 #define TRUE 1
 
 #define eeprom_is_busy() (EECR & (1 << EEPE))
+#define ee_interrupt_is_pending() (ee_interrupt_pending == TRUE)
 
 static volatile uint8_t ee_high_byte = 0;
 static volatile uint8_t ee_high_adress = 0;
 volatile uint8_t ee_interrupt_pending = FALSE;
 
+//Das Aufrufen einer der Funktionen darf nur erfolgen, wenn kein EE-Interrupt aussteht
+
 uint8_t eeprom_read(uint8_t adress) {
+    while(ee_interrupt_is_pending());
     while(eeprom_is_busy());
+    uint8_t sreg_temp = SREG;
+    cli();
     EEARL = adress;
     EECR |= (1 << EERE);
+    SREG = sreg_temp;
     return EEDR;
 }
 
 void eeprom_write(uint8_t adress, uint8_t data) {
+    while(ee_interrupt_is_pending());
     while(eeprom_is_busy());
+    uint8_t sreg_temp = SREG;
+    cli();
     EEARL = adress;
     EEDR = data;
     EECR |= (1 << EEMPE);
     EECR |= (1 << EEPE);
+    SREG = sreg_temp;
 }
 
 ISR(EE_RDY_vect) {
+    ee_interrupt_pending = FALSE;
     eeprom_write(ee_high_byte, ee_high_adress);
     EECR &= ~(1 << EERIE); //Power-Down
-    ee_interrupt_pending = FALSE;
 }
 
 uint16_t eeprom_read_word(uint8_t adress) {
@@ -52,14 +65,16 @@ uint16_t eeprom_read_word(uint8_t adress) {
     return word;
 }
 
-void eeprom_write_word(uint16_t word, uint8_t adress) { //Interrups zuvor abschalten
-    while(ee_interrupt_pending == TRUE); //Vermeidet Race-Condition
+void eeprom_write_word(uint16_t word, uint8_t adress) {
+    while(ee_interrupt_is_pending()); //Vermeidet Race-Condition
+    cli();
     ee_high_adress = adress++; //Wort brauch ZWEI Adressen!
     ee_high_byte = (uint8_t) (word >> 8);
     eeprom_write((uint8_t) word, adress);
     EECR |= (1 << EERIE); //Idle/ADC-Mode
     ee_interrupt_pending = TRUE;
-} //Interrupts wieder einschalten*/
+    sei(); //Interrupts werden immer eingeschaltet!
+}
 
 uint8_t convert_data_to_morse(uint8_t data) {
     if(data > DATA_MAX) {
