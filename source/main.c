@@ -1,7 +1,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
-#include <avr/wdt.h>
 #include <avr/fuse.h>
 
 #include "../lib/wdt.h"
@@ -15,6 +14,11 @@
 
 #define DIT 1
 #define DAH 3
+
+FUSES = {
+    .low = (FUSE_EESAVE),
+    .high = (FUSE_BODLEVEL0),
+};
 
 extern uint16_t battery_level;
 
