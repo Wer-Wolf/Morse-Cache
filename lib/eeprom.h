@@ -22,11 +22,10 @@
 #define TRUE 1
 
 #define eeprom_is_busy() (EECR & (1 << EEPE))
-#define ee_interrupt_is_pending() (ee_interrupt_pending == TRUE)
+#define ee_interrupt_is_pending() (EECR & (1 << EERIE))
 
 static volatile uint8_t ee_high_byte = 0;
 static volatile uint8_t ee_high_adress = 0;
-static volatile uint8_t ee_interrupt_pending = FALSE;
 
 //Das Aufrufen einer der Funktionen darf nur erfolgen, wenn kein EE-Interrupt aussteht
 
@@ -52,9 +51,8 @@ void eeprom_write(uint8_t adress, uint8_t data) {
 }
 
 ISR(EE_RDY_vect) {
-    ee_interrupt_pending = FALSE;
-    eeprom_write(ee_high_byte, ee_high_adress);
     EECR &= ~(1 << EERIE); //Power-Down
+    eeprom_write(ee_high_byte, ee_high_adress);
 }
 
 uint16_t eeprom_read_word(uint8_t adress) {
@@ -71,7 +69,6 @@ void eeprom_write_word(uint16_t word, uint8_t adress) {
         ee_high_byte = (uint8_t) (word >> 8);
         eeprom_write((uint8_t) word, adress);
         EECR |= (1 << EERIE); //Idle/ADC-Mode
-        ee_interrupt_pending = TRUE;
     } //Interrupts werden immer eingeschaltet!
 }
 
