@@ -3,7 +3,7 @@
 
     - Preservation of the Morsecode sequence through firmware updates
 
-    - can be triggered by magnets
+    - Can be triggered by magnets
 
     - Configurable battery warning
 
@@ -20,7 +20,7 @@
     - trigger the circuit:
         1. Hold the magnet over the magnetic switch (long component).
 
-        2. Morse sequence runs, remove magnet.
+        2. When Morse sequence is displayed, remove magnet.
 
         3. After the Morse sequence has finished, the device can be triggered again.
 
