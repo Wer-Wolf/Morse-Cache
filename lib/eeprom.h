@@ -52,22 +52,22 @@ void eeprom_write(uint8_t adress, uint8_t data) {
 
 ISR(EE_RDY_vect) {
     EECR &= ~(1 << EERIE); //Power-Down
-    eeprom_write(ee_high_byte, ee_high_adress);
+    eeprom_write(ee_high_adress, ee_high_byte);
 }
 
 uint16_t eeprom_read_word(uint8_t adress) {
-    uint16_t word = eeprom_read(adress++);
+    uint16_t word = eeprom_read(adress + 1);
     word <<= 8;
     word |= eeprom_read(adress);
     return word;
 }
 
-void eeprom_write_word(uint16_t word, uint8_t adress) {
+void eeprom_write_word(uint8_t adress, uint16_t word) {
     while(ee_interrupt_is_pending()); //Vermeidet Race-Condition
     ATOMIC_BLOCK(ATOMIC_FORCEON) {
-        ee_high_adress = adress++; //Wort brauch ZWEI Adressen!
+        ee_high_adress = adress + 1; //Wort brauch ZWEI Adressen!
         ee_high_byte = (uint8_t) (word >> 8);
-        eeprom_write((uint8_t) word, adress);
+        eeprom_write(adress, (uint8_t) word);
         EECR |= (1 << EERIE); //Idle/ADC-Mode
     } //Interrupts werden immer eingeschaltet!
 }
