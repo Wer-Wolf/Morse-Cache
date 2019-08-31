@@ -80,6 +80,7 @@ int main(void) {
     while(1) {
         wait_for_input();
         battery_start_measuring();
+        clear_led(GREEN); //Falls Kalibrierung stattgefunden hat
         while(battery_is_busy()) {
             set_sleep_mode(SLEEP_MODE_ADC);
             sleep_enable();
@@ -89,8 +90,6 @@ int main(void) {
         if(check_for_calibration() == CALIBRATION_NEEDED) {
             eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
             set_led(GREEN);
-            wait_for_input();
-            clear_led(GREEN);
         } else {
             counter = eeprom_read_word(COUNTER_LOW_ADRESS);
             if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS) || counter == COUNTER_MAX) { //Zu geringe Spannung oder Zähler voll
