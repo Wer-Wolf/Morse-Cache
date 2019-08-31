@@ -1,7 +1,29 @@
 #include <avr/interrupt.h>
 
-#define PULLUP_ENABLE_PIN PB4
-#define ADC_INPUT_PIN PB3
+#ifndef PULLUP_ENABLE_PIN
+    #warning PULLUP_ENABLE_PIN automatically defined as PB4
+    #define PULLUP_ENABLE_PIN PB4
+#endif
+#ifndef ADC_INPUT_PIN
+    #warning ADC_INPUT_PIN automatically defined as PB3
+    #define ADC_INPUT_PIN PB3
+#endif
+#if ADC_INPUT_PIN == PB2
+    #define MUX_VALUE 1
+#endif
+#if ADC_INPUT_PIN == PB3
+    #define MUX_VALUE 3
+#endif
+#if ADC_INPUT_PIN == PB4
+    #define MUX_VALUE 2
+#endif
+#if ADC_INPUT_PIN == PB5
+    #define MUX_VALUE 0
+#endif
+#if ADC_INPUT_PIN == PB1 || ADC_INPUT_PIN == PB0
+    #error No ADC Input available on selected Pin (PB0 or PB1)
+    #define MUX_VALUE 0
+#endif
 
 #define CALIBRATION_NEEDED 0
 #define NO_CALIBRATION 1
@@ -21,7 +43,7 @@ ISR(ADC_vect) {
 inline void battery_init() {
     ACSR |= (1 << ACD); //Stromsparen
     DIDR0 |= (1 << ADC3D);
-    ADMUX |= (1 << REFS0) | (1 << MUX0) | (1 << MUX1); //1,1V, PB3
+    ADMUX |= (1 << REFS0) | (MUX_VALUE << MUX0); //1,1V, PB3
     ADCSRA |= (1 << ADIE) | (1 << ADPS0) | (1 << ADPS1); //150 kHz
     PRR |= (1 << PRADC);
 }
