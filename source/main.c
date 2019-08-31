@@ -80,6 +80,8 @@ int main(void) {
         if(check_for_calibration() == CALIBRATION_NEEDED) {
             eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
             set_led(GREEN);
+            wait_for_input();
+            clear_led(GREEN);
         } else {
             counter = eeprom_read_word(COUNTER_LOW_ADRESS);
             if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS) || counter == COUNTER_MAX) { //Zu geringe Spannung oder Zähler voll
