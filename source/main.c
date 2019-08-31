@@ -5,8 +5,16 @@
 
 #include "../lib/wdt.h"
 #include "../lib/eeprom.h"
+
+#define INPUT_PIN PB2 //PCINT2
 #include "../lib/input.h"
+
+#define PULLUP_ENABLE_PIN PB4
+#define ADC_INPUT_PIN PB3
 #include "../lib/battery.h"
+
+#define RED_LED_PIN PB0 //OC0A
+#define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
 #define FINISHED 0
@@ -43,7 +51,7 @@ ISR(WDT_vect) {
             wdt_cycles_off = DIT;
         }
     } else {
-        if(wdt_counter < wdt_cycles_on) {
+        if(wdt_counter <= wdt_cycles_on) {
             set_led(color);
         } else {
             clear_led(color);
@@ -63,9 +71,10 @@ ISR(WDT_vect) {
 
 int main(void) {
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
-    wdt_set(MS500);
-    input_init();
+    PRR |= (1 << PRTIM0); //Kein Timmer
     battery_init();
+    input_init();
+    wdt_set(MS500);
     uint16_t counter;
     sei();
     while(1) {
