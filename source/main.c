@@ -9,6 +9,7 @@
 #define INPUT_PIN PB2 //PCINT2
 #include "../lib/input.h"
 
+#define F_CPU 1200000UL
 #define PULLUP_ENABLE_PIN PB4
 #define ADC_INPUT_PIN PB3
 #include "../lib/battery.h"
