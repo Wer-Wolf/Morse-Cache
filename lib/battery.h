@@ -33,31 +33,31 @@
 
 #if (F_CPU / 2) >= 50000 && (F_CPU / 2) <= 200000
     #define ADC_PRESCALER_SELECT 1
-    #pragma message("Prescaler: 2")
+    //#pragma message("Prescaler: 2")
 #else
     #if (F_CPU / 4) >= 50000 && (F_CPU / 4) <= 200000
         #define ADC_PRESCALER_SELECT 2
-        #pragma message("Prescaler: 4")
+        //#pragma message("Prescaler: 4")
     #else
         #if (F_CPU / 8) >= 50000 && (F_CPU / 8) <= 200000
             #define ADC_PRESCALER_SELECT 3
-            #pragma message("Prescaler: 8")
+            //#pragma message("Prescaler: 8")
         #else
             #if (F_CPU / 16) >= 50000 && (F_CPU / 16) <= 200000
                 #define ADC_PRESCALER_SELECT 4
-                #pragma message("Prescaler: 16")
+                //#pragma message("Prescaler: 16")
             #else
                 #if (F_CPU / 32) >= 50000 && (F_CPU / 32) <= 200000
                     #define ADC_PRESCALER_SELECT 5
-                    #pragma message("Prescaler: 32")
+                    //#pragma message("Prescaler: 32")
                 #else
                     #if (F_CPU / 64) >= 50000 && (F_CPU / 64) <= 200000
                         #define ADC_PRESCALER_SELECT 6
-                        #pragma message("Prescaler: 64")
+                        //#pragma message("Prescaler: 64")
                     #else
                         #if (F_CPU / 128) >= 50000 && (F_CPU / 128) <= 200000
                             #define ADC_PRESCALER_SELECT 7
-                            #pragma message("Prescaler: 128")
+                            //#pragma message("Prescaler: 128")
                         #else
                             #error F_CPU too high or too low
                             #define ADC_PRESCALER_SELECT 0 //Übersichtlichere Fehlermeldung
