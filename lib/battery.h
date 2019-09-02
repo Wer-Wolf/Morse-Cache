@@ -78,8 +78,9 @@ uint16_t battery_level = 0;
 
 ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
-    battery_level = ADCL;
-    battery_level |= ((uint16_t) ADCH << 8);
+    /*battery_level = ADCL;
+    battery_level |= ((uint16_t) ADCH << 8);*/
+    battery_level = ADC;
     ADCSRA &= ~(1 << ADEN);
     PRR |= (1 << PRADC);
 }
