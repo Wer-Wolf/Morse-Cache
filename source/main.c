@@ -107,13 +107,10 @@ int main(void) {
                 color = RED;
             } else {
                 counter = eeprom_read(COUNTER_ADRESS);
-                if(counter >= COUNTER_THRESHOLD) {
-                    //Besonderes Ereignis
-                    eeprom_write(COUNTER_ADRESS, 0);
-                } else {
+                if(counter < COUNTER_THRESHOLD) {
                     eeprom_write(COUNTER_ADRESS, counter + 1);
                 }
-                sleep();
+                //sleep();
                 color = GREEN;
             }
             set_sleep_mode(SLEEP_MODE_PWR_DOWN);
