@@ -2,6 +2,7 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/fuse.h>
+#include <util/atomic.h>
 
 #include "../lib/wdt.h"
 #include "../lib/eeprom.h"
@@ -24,6 +25,8 @@
 #define DIT 1
 #define DAH 3
 
+#define COUNTER_THRESHOLD 100
+
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
     .high = (FUSE_BODLEVEL0),
@@ -40,16 +43,21 @@ ISR(WDT_vect) {
     static uint8_t wdt_cycles_on = 0;
     static uint8_t wdt_cycles_off = 0;
     if(wdt_counter == 0) {
-        if(morse_code & (1 << 0)) { //dah
-            wdt_cycles_on = DAH;
-        } else { //dit
-            wdt_cycles_on = DIT;
-        }
-        morse_code >>= 1;
-        if(morse_code == 1) { //Ende des Buchstabens
-            wdt_cycles_off = DAH;
+        if(morse_code == 0) { //Illegale Daten
+            morse_code_status = FINISHED;
+            wdt_off();
         } else {
-            wdt_cycles_off = DIT;
+            if(morse_code & (1 << 0)) { //dah
+                wdt_cycles_on = DAH;
+            } else { //dit
+                wdt_cycles_on = DIT;
+            }
+            morse_code >>= 1;
+            if(morse_code == 1) { //Ende des Buchstabens
+                wdt_cycles_off = DAH;
+            } else {
+                wdt_cycles_off = DIT;
+            }
         }
     } else {
         if(wdt_counter <= wdt_cycles_on) {
@@ -58,47 +66,57 @@ ISR(WDT_vect) {
             clear_led(color);
         }
     }
-    if(wdt_counter > wdt_cycles_on + wdt_cycles_off) {
+    if(wdt_counter > wdt_cycles_on + wdt_cycles_off) { //Periode beendet
         if(wdt_cycles_off == DAH) {
             morse_code_status = FINISHED;
             wdt_off();
-        } else {
-            wdt_counter = 0;
         }
+        wdt_counter = 0;
     } else {
         wdt_counter++;
     }
 }
 
+void sleep() {
+    sleep_enable();
+    NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
+        sleep_cpu();
+    }
+    sleep_disable();
+}
+
 int main(void) {
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
-    PRR |= (1 << PRTIM0); //Kein Timmer
+    PRR |= (1 << PRTIM0); //Kein Timer
     battery_init();
     input_init();
     wdt_set(MS500);
-    uint16_t counter;
-    sei();
+    uint8_t counter;
     while(1) {
         wait_for_input();
         battery_start_measuring();
         clear_led(GREEN); //Falls Kalibrierung stattgefunden hat
-        while(battery_is_busy()) {
-            set_sleep_mode(SLEEP_MODE_ADC);
-            sleep_enable();
-            sleep_cpu();
-            sleep_disable();
-        }
+        set_sleep_mode(SLEEP_MODE_ADC);
+        sleep();
         if(check_for_calibration() == CALIBRATION_NEEDED) {
             eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
+            sleep();
             set_led(GREEN);
         } else {
-            counter = eeprom_read_word(COUNTER_LOW_ADRESS);
-            if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS) || counter == COUNTER_MAX) { //Zu geringe Spannung oder Zähler voll
+            if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
                 color = RED;
             } else {
-                eeprom_write_word(COUNTER_LOW_ADRESS, counter + 1);
+                counter = eeprom_read(COUNTER_ADRESS);
+                if(counter >= COUNTER_THRESHOLD) {
+                    //Besonderes Ereignis
+                    eeprom_write(COUNTER_ADRESS, 0);
+                } else {
+                    eeprom_write(COUNTER_ADRESS, counter + 1);
+                }
+                sleep();
                 color = GREEN;
             }
+            set_sleep_mode(SLEEP_MODE_PWR_DOWN);
             do {
                 morse_code = eeprom_get_morse_code();
                 if(morse_code == END_OF_DATA) {
@@ -107,10 +125,7 @@ int main(void) {
                 morse_code_status = RUNNING;
                 wdt_on();
                 while(morse_code_status != FINISHED) {
-                    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-                    sleep_enable();
-                    sleep_cpu();
-                    sleep_disable();
+                    sleep();
                 }
             } while(1);
         } 
