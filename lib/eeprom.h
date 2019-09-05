@@ -26,7 +26,7 @@
 static volatile uint8_t ee_high_byte = 0;
 static volatile uint8_t ee_high_adress = 0;
 
-//Das Aufrufen einer der Funktionen darf nur erfolgen, wenn kein EE-Interrupt aussteht
+//Das Aufrufen einer der Funktionen bei deaktivierten Interrupts darf nur erfolgen, wenn kein EE-Interrupt aussteht
 
 uint8_t eeprom_read(uint8_t adress) {
     while(ee_interrupt_is_pending());
@@ -63,12 +63,12 @@ uint16_t eeprom_read_word(uint8_t adress) {
 
 void eeprom_write_word(uint8_t adress, uint16_t word) {
     while(ee_interrupt_is_pending()); //Vermeidet Race-Condition
-    ATOMIC_BLOCK(ATOMIC_FORCEON) {
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         ee_high_adress = adress + 1; //Wort brauch ZWEI Adressen!
         ee_high_byte = (uint8_t) (word >> 8);
         eeprom_write(adress, (uint8_t) word);
         EECR |= (1 << EERIE); //Idle/ADC-Mode
-    } //Interrupts werden immer eingeschaltet!
+    } //Interrupts müssen eingeschalten werden, um Operation zu beenden
 }
 
 uint8_t convert_data_to_morse(uint8_t data) {
