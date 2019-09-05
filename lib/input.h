@@ -15,7 +15,7 @@ ISR(PCINT0_vect) {
 
 #define input_init() GIMSK |= (1 << PCIE)
 
-inline void wait_for_input() {
+inline void wait_for_input() { //Interrupts müssen zuvor deaktiviert sein
     PORTB |= (1 << INPUT_PIN); //Kein externer Pullup
     PCMSK |= (1 << INPUT_PIN);
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
