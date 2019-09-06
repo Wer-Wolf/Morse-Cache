@@ -110,7 +110,6 @@ int main(void) {
                 if(counter < COUNTER_THRESHOLD) {
                     eeprom_write(COUNTER_ADRESS, counter + 1);
                 }
-                //sleep();
                 color = GREEN;
             }
             set_sleep_mode(SLEEP_MODE_PWR_DOWN);
