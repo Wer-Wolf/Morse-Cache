@@ -1,12 +1,12 @@
 #include <avr/interrupt.h>
 
 #ifndef PULLUP_ENABLE_PIN
-    #warning PULLUP_ENABLE_PIN automatically defined as PB4
-    #define PULLUP_ENABLE_PIN PB4
+    #error PULLUP_ENABLE_PIN not defined
+    #define PULLUP_ENABLE_PIN 0
 #endif
 #ifndef ADC_INPUT_PIN
-    #warning ADC_INPUT_PIN automatically defined as PB3
-    #define ADC_INPUT_PIN PB3
+    #error ADC_INPUT_PIN not defined
+    #define ADC_INPUT_PIN 0
 #endif
 #if ADC_INPUT_PIN == PB2
     #define MUX_VALUE 1
