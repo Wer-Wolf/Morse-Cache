@@ -2,11 +2,11 @@
 
 #ifndef PULLUP_ENABLE_PIN
     #error PULLUP_ENABLE_PIN not defined
-    #define PULLUP_ENABLE_PIN 0
+    #define PULLUP_ENABLE_PIN PB4 //Übersichtlichere Fehlermeldung
 #endif
 #ifndef ADC_INPUT_PIN
     #error ADC_INPUT_PIN not defined
-    #define ADC_INPUT_PIN 0
+    #define ADC_INPUT_PIN PB3 //Übersichtlichere Fehlermeldung
 #endif
 #if ADC_INPUT_PIN == PB2
     #define MUX_VALUE 1
