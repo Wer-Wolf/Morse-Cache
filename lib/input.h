@@ -6,14 +6,14 @@
     #define INPUT_PIN PB2 //PCINT2
 #endif
 
+#define input_pending() (PCMSK & (1 << INPUT_PIN))
+
+#define input_init() GIMSK |= (1 << PCIE)
+
 ISR(PCINT0_vect) {
     PCMSK &= ~(1 << INPUT_PIN);
     PORTB &= ~(1 << INPUT_PIN);
 }
-
-#define input_pending() (PCMSK & (1 << INPUT_PIN))
-
-#define input_init() GIMSK |= (1 << PCIE)
 
 inline void wait_for_input() { //Interrupts müssen zuvor deaktiviert sein
     PORTB |= (1 << INPUT_PIN); //Kein externer Pullup
