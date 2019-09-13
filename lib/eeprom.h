@@ -11,10 +11,6 @@
 #define BATTERY_CALIBRATION_LOW_ADRESS 0x3E
 #define BATTERY_CALIBRATION_HIGH_ADRESS 0x3F
 
-#define END_OF_DATA 0xFF
-#define ILLEGAL_DATA 0
-#define DATA_MAX 9
-
 #define COUNTER_MAX 0xFFFF
 
 #define FALSE 0
@@ -70,51 +66,3 @@ void eeprom_write_word(uint8_t adress, uint16_t word) {
         EECR |= (1 << EERIE); //Idle/ADC-Mode
     } //Interrupts müssen eingeschalten werden, um Operation zu beenden
 }
-
-uint8_t convert_data_to_morse(uint8_t data) {
-    if(data > DATA_MAX) {
-        return ILLEGAL_DATA;
-    } else {
-        return ((uint8_t) ((0xFC1F >> data) & 0x1F)) | (1 << 5);
-    }
-}
-
-uint8_t eeprom_parse_data(uint8_t adress) {
-    uint8_t data = eeprom_read(adress);
-    if(data == END_OF_DATA || adress == DATA_END_ADRESS) {
-        return END_OF_DATA;
-    } else {
-        return convert_data_to_morse(data);
-    }
-}
-
-uint8_t eeprom_get_morse_code() {
-    static uint8_t ee_data_adress = DATA_START_ADRESS;
-    uint8_t data;
-    do {
-        data = eeprom_parse_data(ee_data_adress);
-        ee_data_adress++;
-    } while(data == ILLEGAL_DATA);
-    if(data == END_OF_DATA) {
-        ee_data_adress = DATA_START_ADRESS;
-    }
-    return data;
-}
-
-/*
-Format:
-
-0 = dit (.)
-1 = dah (_)
-
-Beispiel:
-0 0 1 1 1 1 1 0 = 9
-    ^
-    Morsecode (. . . _ _ _ _ .)
-         ^
-         Abschluss des Zeichens (gehöhrt nicht mehr zum Morsecode)
-
-- Von rechts lesen, danach um 1 nach rechts schieben
-
-- Ende wenn gleich 1
-*/
