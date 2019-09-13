@@ -2,8 +2,8 @@
 #include <util/atomic.h>
 
 #ifndef INPUT_PIN
-    #warning INPUT_PIN automatically defined as PB2
-    #define INPUT_PIN PB2 //PCINT2
+    #error INPUT_PIN not defined
+    #define INPUT_PIN PB2 //Übersichtlichere Fehlermeldung
 #endif
 
 #define input_pending() (PCMSK & (1 << INPUT_PIN))
