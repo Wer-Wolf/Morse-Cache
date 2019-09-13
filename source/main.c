@@ -6,6 +6,7 @@
 
 #include "../lib/wdt.h"
 #include "../lib/eeprom.h"
+#include "../lib/morse.h"
 
 #define INPUT_PIN PB2 //PCINT2
 #include "../lib/input.h"
