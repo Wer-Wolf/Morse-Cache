@@ -1,6 +1,9 @@
 MCU = attiny13
+#avrdude with .elf support (version 6.x) required
 AVR_PROGRAMMER = usbasp
 TARGET = main
+
+.PHONY: all fuse programm clean size
 
 all: $(TARGET).hex
 
