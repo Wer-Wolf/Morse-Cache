@@ -1,20 +1,7 @@
 #include <util/atomic.h> //-std=gnu99
 #include <avr/interrupt.h>
 
-#define DIRTY_BIT_ADRESS 0x00
-
-#define DATA_START_ADRESS 0x01
-#define DATA_END_ADRESS 0x3C
-
-#define COUNTER_ADRESS 0x3D
-
-#define BATTERY_CALIBRATION_LOW_ADRESS 0x3E
-#define BATTERY_CALIBRATION_HIGH_ADRESS 0x3F
-
-#define COUNTER_MAX 0xFFFF
-
-#define FALSE 0
-#define TRUE 1
+#include "adress.h"
 
 #define eeprom_is_busy() (EECR & (1 << EEPE))
 #define ee_interrupt_is_pending() (EECR & (1 << EERIE))
