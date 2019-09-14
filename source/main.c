@@ -6,6 +6,7 @@
 
 #include "../lib/wdt.h"
 #include "../lib/eeprom.h"
+#include "../util/adress.h"
 #include "../lib/morse.h"
 
 #define INPUT_PIN PB2 //PCINT2
@@ -14,6 +15,7 @@
 #define F_CPU 1200000UL
 #define PULLUP_ENABLE_PIN PB4
 #define ADC_INPUT_PIN PB3
+#include "../util/adc_prescaler.h"
 #include "../lib/battery.h"
 
 #define RED_LED_PIN PB0 //OC0A
