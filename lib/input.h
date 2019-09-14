@@ -1,4 +1,5 @@
 #include <avr/interrupt.h>
+#include <avr/sleep.h>
 #include <util/atomic.h>
 
 #ifndef INPUT_PIN
