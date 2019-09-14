@@ -1,3 +1,8 @@
+#pragma once
+
+#include "../lib/eeprom.h"
+#include "../util/adress.h"
+
 #define END_OF_DATA 0xFF
 #define ILLEGAL_DATA 0
 #define DATA_MAX 9

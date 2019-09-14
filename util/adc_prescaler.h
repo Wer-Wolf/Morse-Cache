@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef F_CPU
     #error F_CPU not defined
     #define F_CPU 1200000 //Übersichtlichere Fehlermeldung

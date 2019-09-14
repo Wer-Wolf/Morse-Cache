@@ -1,3 +1,5 @@
+#pragma once
+
 #include <util/atomic.h> //-std=gnu99
 #include <avr/interrupt.h>
 

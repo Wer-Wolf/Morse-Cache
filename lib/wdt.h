@@ -1,3 +1,5 @@
+#pragma once
+
 #include <avr/wdt.h>
 #include <util/atomic.h> //-std=gnu99
 

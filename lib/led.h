@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef RED_LED_PIN
     #error RED_LED_PIN not defined
     #define RED_LED_PIN PB0 //Übersichtlichere Fehlermeldung

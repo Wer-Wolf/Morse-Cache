@@ -1,3 +1,5 @@
+#pragma once
+
 #define DIRTY_BIT_ADRESS 0x00
 
 #define DATA_START_ADRESS 0x01

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <avr/interrupt.h>
 
 #ifndef ADC_PRESCALER_SELECT_BITS
