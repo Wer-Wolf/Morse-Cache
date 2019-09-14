@@ -1,7 +1,9 @@
 #include <avr/interrupt.h>
 
-#include "adc_prescaler.h"
-
+#ifndef ADC_PRESCALER_SELECT_BITS
+    #error ADC_PRESCALER_SELECT_BITS not defined
+    #define ADC_PRESACLER_SELECT_BITS 0 //Übersichtlichere Fehlermeldung
+#endif
 #ifndef PULLUP_ENABLE_PIN
     #error PULLUP_ENABLE_PIN not defined
     #define PULLUP_ENABLE_PIN PB4 //Übersichtlichere Fehlermeldung

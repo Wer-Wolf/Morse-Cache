@@ -1,8 +1,6 @@
 #include <util/atomic.h> //-std=gnu99
 #include <avr/interrupt.h>
 
-#include "adress.h"
-
 #define eeprom_is_busy() (EECR & (1 << EEPE))
 #define ee_interrupt_is_pending() (EECR & (1 << EERIE))
 
