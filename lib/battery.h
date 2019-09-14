@@ -1,5 +1,7 @@
 #include <avr/interrupt.h>
 
+#include "adc_prescaler.h"
+
 #ifndef PULLUP_ENABLE_PIN
     #error PULLUP_ENABLE_PIN not defined
     #define PULLUP_ENABLE_PIN PB4 //Übersichtlichere Fehlermeldung
@@ -9,61 +11,23 @@
     #define ADC_INPUT_PIN PB3 //Übersichtlichere Fehlermeldung
 #endif
 #if ADC_INPUT_PIN == PB2
-    #define MUX_VALUE 1
+    #define MUX_SELECT_BITS 1
     #define DID_VALUE ADC1D
 #else
     #if ADC_INPUT_PIN == PB3
-        #define MUX_VALUE 3
+        #define MUX_SELECT_BITS 3
         #define DID_VALUE ADC3D
     #else
         #if ADC_INPUT_PIN == PB4
-            #define MUX_VALUE 2
+            #define MUX_SELECT_BITS 2
             #define DID_VALUE ADC2D
         #else
             #if ADC_INPUT_PIN == PB5
-                #define MUX_VALUE 0
+                #define MUX_SELECT_BITS 0
                 #define DID_VALUE ADC0D
             #else
                 #error No ADC Input available on selected Pin
-                #define MUX_VALUE 0 //Übersichtlichere Fehlermeldung
-            #endif
-        #endif
-    #endif
-#endif
-
-#if (F_CPU / 2) >= 50000 && (F_CPU / 2) <= 200000
-    #define ADC_PRESCALER_SELECT 1
-    //#pragma message("Prescaler: 2")
-#else
-    #if (F_CPU / 4) >= 50000 && (F_CPU / 4) <= 200000
-        #define ADC_PRESCALER_SELECT 2
-        //#pragma message("Prescaler: 4")
-    #else
-        #if (F_CPU / 8) >= 50000 && (F_CPU / 8) <= 200000
-            #define ADC_PRESCALER_SELECT 3
-            //#pragma message("Prescaler: 8")
-        #else
-            #if (F_CPU / 16) >= 50000 && (F_CPU / 16) <= 200000
-                #define ADC_PRESCALER_SELECT 4
-                //#pragma message("Prescaler: 16")
-            #else
-                #if (F_CPU / 32) >= 50000 && (F_CPU / 32) <= 200000
-                    #define ADC_PRESCALER_SELECT 5
-                    //#pragma message("Prescaler: 32")
-                #else
-                    #if (F_CPU / 64) >= 50000 && (F_CPU / 64) <= 200000
-                        #define ADC_PRESCALER_SELECT 6
-                        //#pragma message("Prescaler: 64")
-                    #else
-                        #if (F_CPU / 128) >= 50000 && (F_CPU / 128) <= 200000
-                            #define ADC_PRESCALER_SELECT 7
-                            //#pragma message("Prescaler: 128")
-                        #else
-                            #error F_CPU too high or too low
-                            #define ADC_PRESCALER_SELECT 0 //Übersichtlichere Fehlermeldung
-                        #endif
-                    #endif
-                #endif
+                #define MUX_SELECT_BITS 0 //Übersichtlichere Fehlermeldung
             #endif
         #endif
     #endif
@@ -86,8 +50,8 @@ ISR(ADC_vect) {
 inline void battery_init() {
     ACSR |= (1 << ACD); //Stromsparen
     DIDR0 |= (1 << DID_VALUE);
-    ADMUX |= (1 << REFS0) | (MUX_VALUE << MUX0); //1,1V
-    ADCSRA |= (1 << ADIE) | (ADC_PRESCALER_SELECT << ADPS0);
+    ADMUX |= (1 << REFS0) | (MUX_SELECT_BITS << MUX0); //1,1V
+    ADCSRA |= (1 << ADIE) | (ADC_PRESCALER_SELECT_BITS << ADPS0);
     PRR |= (1 << PRADC);
 }
 
