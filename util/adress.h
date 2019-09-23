@@ -1,7 +1,7 @@
 #pragma once
 
 #define DATA_START_ADRESS 0x00
-#define DATA_END_ADRESS 0x3D
+#define DATA_END_ADRESS 0x3D //Should contain 0xFF
 
 #define BATTERY_CALIBRATION_LOW_ADRESS 0x3E
 #define BATTERY_CALIBRATION_HIGH_ADRESS 0x3F
