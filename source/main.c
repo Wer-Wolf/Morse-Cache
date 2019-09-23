@@ -22,7 +22,7 @@
 #define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
-#define RESET_SOURCE_CRITICAL (reset_source & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF)))
+#define EXTERNAL_RESET_OCCURED (reset_source & (1 << EXTRF))
 
 #define FINISHED 0
 #define RUNNING 1
@@ -91,7 +91,7 @@ int main(void) {
     battery_init();
     input_init();
     wdt_set(MS500);
-    if(RESET_SOURCE_CRITICAL) { //EEPROM checken
+    if(EXTERNAL_RESET_OCCURED) { //EEPROM checken
         color = RED;
         uint8_t eeprom_data;
         uint8_t eeprom_adress = DATA_START_ADRESS;
