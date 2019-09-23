@@ -1,13 +1,11 @@
 1. Features:
-    - Output a Morsecode sequence consisting of a maximum of 52 numbers
+    - Output a Morsecode sequence consisting of a maximum of 61 numbers
 
     - Preservation of the Morsecode sequence through firmware updates
 
     - Can be triggered by magnets
 
     - Configurable battery warning
-
-    - use-counter up to 100 visitors (not active when battery is low)
 
     - Low space and power consumption
 
@@ -54,10 +52,9 @@
 
         3. Extract and flash .hex file with programming adapter.
 
-    - Reading the use-counter / Changing the Morse sequence:
+    - Changing the Morse sequence:
 
-        - Up to now only possible with programming adapter. :-(
-          (Solution in progress)
+        - Only possible with programming adapter. :-(
             -> See "Developer" for details
 
 3. Developer:
@@ -71,21 +68,13 @@
 
         - Addresses:
 
-            - Start: 0x01
-            - End (maximum): 0x3C
+            - Start: 0x00
+            - End (maximum): 0x3D
 
-            - The string must be completed (at 0x3C at the latest) with a 0xFF
-            - Only numbers between 0x00 and 0x09 (0-9) are accepted
+            - The string must be terminated (at 0x3D at the latest) with 0xFF
+            - Only numbers between 0x00 and 0x09 (0-9) are accepted data values
+            - Invaild data will be ignored
 
-    - use-counter:
-
-        - Will be incremented each time the magnetic switch is triggered
-          -> max. value is 100
-
-        - Addresses:
-
-            - counter byte: 0x3D
-    
     - Battery calibration:
 
         - Adresses:
@@ -94,15 +83,13 @@
             low byte: 0x3E
 
 1. Features:
-    - Ausgeben einer Morsesequenz aus maximal 52 Nummern.
+    - Ausgeben einer Morsesequenz aus maximal 61 Nummern.
 
     - Beibehalten der Morsesequenz nach Firmwareupdates
 
     - Auslösung durch Magneten
 
     - Konfigurierbarer Batteriewarner
-
-    - Benutzerzähler bis 100 Besucher (nicht aktiv wenn Batterie schwach)
 
     - Niedriger Platz- und Stromverbrauch
 
@@ -149,10 +136,9 @@
 
         3. Extrahieren und .hex-Datei mit Programmieradapter flashen.
 
-    - Auslesen des Besucherzählers/Ändern der Morsesequenz:
+    - Ändern der Morsesequenz:
 
-        - Bis jetzt nur mit Programmieradapter möglich. :-(
-          (Lösung in Arbeit)
+        - Nur mit Programmieradapter möglich. :-(
             --> Genaueres bei "Entwickler"
 
 3. Entwickler:
@@ -166,20 +152,13 @@
 
         - Adressen:
 
-            - Start: 0x01
-            - Ende (maximal): 0x3C
+            - Start: 0x00
+            - Ende (maximal): 0x3D
 
-            - Die Zeichenkette muss (spätestens bei 0x3C) mit einem 0xFF abgeschlossen werden
+            - Die Zeichenkette muss (spätestens bei 0x3D) mit 0xFF abgeschlossen werden
             - Nur die Nummern 0x00 bis 0x09 (0-9) werden aktzeptiert
+            - ungültige Daten werden ignoriert
 
-    - Benutzerzähler:
-
-        - Wird bei jedem Auslösen des Magnetschalters inkrementiert
-            --> max. Wert ist 100
-
-        - Adressen:
-
-            - Zählerbyte: 0x3D
     - Batterie Kalibrierung:
 
         - Adressem:
