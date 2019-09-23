@@ -22,11 +22,10 @@
 #define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
+#define RESET_SOURCE_CRITICAL (reset_source & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF)))
+
 #define FINISHED 0
 #define RUNNING 1
-
-#define DIT 1
-#define DAH 3
 
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
@@ -85,11 +84,35 @@ void sleep() {
 }
 
 int main(void) {
+    uint8_t reset_source = MCUSR;
+    MCUSR = 0;
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
     PRR |= (1 << PRTIM0); //Kein Timer
     battery_init();
     input_init();
     wdt_set(MS500);
+    if(RESET_SOURCE_CRITICAL) { //EEPROM checken
+        color = RED;
+        uint8_t eeprom_data;
+        uint8_t eeprom_adress = DATA_START_ADRESS;
+        do {
+            eeprom_data = eeprom_read(eeprom_adress);
+            if(eeprom_data > DATA_MAX) { //Ende oder Fehler
+                if(eeprom_data == END_OF_DATA) {
+                    color = GREEN;
+                } //Sonst Fehler (RED)
+                break;
+            } else {
+                eeprom_adress++;
+            }
+        } while(eeprom_adress <= DATA_END_ADRESS);
+        set_led(color);
+        morse_code_status = RUNNING;
+        wdt_on(); //Beended sich durch morse_code = 0 sofort
+        sleep();
+        wdt_reset();
+        clear_led(color);
+    }
     while(1) {
         wait_for_input();
         battery_start_measuring();
