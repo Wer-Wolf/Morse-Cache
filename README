@@ -55,7 +55,6 @@
             Red: a error was found.
 
             --> A defective Morse-Cache should be repaired before used again.
-            --> When reset by undervoltage, the self-test will be performed automatically.
 
     - Updating the device firmware:
         --> Only possible with programming adapter
@@ -152,7 +151,6 @@
             Rot: Es wurde ein Fehler gefunden.
 
             --> Ein fehlerhafter Morse-Cache sollte nicht ohne Reparatur verwendet werden.
-            --> Bei einem Reset durch Unterspannung wird der Selbsttest automatisch ausgeführt.
 
     - Update der Firmware:
         --> Nur mit Programmieradapter möglich
