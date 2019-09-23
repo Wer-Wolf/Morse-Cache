@@ -28,14 +28,10 @@
 #define DIT 1
 #define DAH 3
 
-#define COUNTER_THRESHOLD 100
-
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
     .high = (FUSE_BODLEVEL0),
 };
-
-extern uint16_t battery_level;
 
 static volatile uint8_t color = 0;
 static volatile uint8_t morse_code = 0;
@@ -46,7 +42,7 @@ ISR(WDT_vect) {
     static uint8_t wdt_cycles_on = 0;
     static uint8_t wdt_cycles_off = 0;
     if(wdt_counter == 0) {
-        if(morse_code == 0) { //Illegale Daten
+        if(morse_code <= 1) { //Illegale Daten
             morse_code_status = FINISHED;
             wdt_off();
         } else {
@@ -94,7 +90,6 @@ int main(void) {
     battery_init();
     input_init();
     wdt_set(MS500);
-    uint8_t counter;
     while(1) {
         wait_for_input();
         battery_start_measuring();
@@ -109,10 +104,6 @@ int main(void) {
             if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
                 color = RED;
             } else {
-                counter = eeprom_read(COUNTER_ADRESS);
-                if(counter < COUNTER_THRESHOLD) {
-                    eeprom_write(COUNTER_ADRESS, counter + 1);
-                }
                 color = GREEN;
             }
             set_sleep_mode(SLEEP_MODE_PWR_DOWN);
