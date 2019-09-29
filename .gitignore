@@ -3,6 +3,8 @@
 /source/*.elf
 /source/*.hex
 
+/tool/eeptool
+
 #other files
 doc8126.pdf
 Storie.txt
