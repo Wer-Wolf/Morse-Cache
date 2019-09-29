@@ -11,42 +11,42 @@
 
 int main(int argc, char *argv[]) {
     if(argc < ARGS_COUNT) {
-        fprintf(stderr, "Too few arguments\nUsage: ./eeptool <FILE> <DATA>\n");
+        fprintf(stderr, "ERROR: Too few arguments\nUsage: ./eeptool <FILE> <DATA>\n");
         return 1;
     } else {
         if(argc > ARGS_COUNT) {
-            fprintf(stderr, "Too many arguments\nUsage: ./eeptool <FILE> <DATA>\n");
+            fprintf(stderr, "ERROR: Too many arguments\nUsage: ./eeptool <FILE> <DATA>\n");
             return 1;
-        } else {
-            int length = strlen(DATA);
-            char *arg_data;
-            arg_data = DATA;
-            for(int i = 0; i < length; i++) {
-                if(!isdigit(*arg_data)) {
-                    fprintf(stderr, "Data contains illegal character: %c\n", *arg_data);
-                    return 1;
-                } else {
-                    arg_data++;
-                }
-            }
-            if(length > MAX_DIGITS) {
-                fprintf(stderr, "Too many digits, maximum is MAX_DIGITS\n");
+        } else { //Argumente korrekt
+            if(strlen(DATA) > MAX_DIGITS) {
+                fprintf(stderr, "ERROR: Too much data, maximum is %d\n", MAX_DIGITS);
                 return 1;
-            } else { //Daten sind korrekt
+            } else {
+                int length = strlen(DATA);
+                for(int i = 0; i < length; i++) {
+                    if(!isdigit(*(DATA + i))) {
+                        fprintf(stderr, "ERROR: Data contains illegal character: %c\n", *(DATA + i));
+                        return 1;
+                    }
+                }
+                //Daten sind korrekt
+                printf("Data sucessfully loaded: %s\nNummber of digits: %d\n", DATA, length);
                 FILE *file;
                 file = fopen(FILENAME, "wb");
                 if(file == NULL) {
-                    fprintf(stderr, "Could not acess %s\n", FILENAME);
+                    fprintf(stderr, "ERROR: Could not access %s\n", FILENAME);
                     return 1;
                 } else {
+                    printf("Writing data to %s\n", FILENAME);
                     int digit;
-                    char *arg_digit;
-                    arg_digit = DATA;
                     for(int i = 0; i < length; i++) {
-                        digit = *arg_digit - '0'; //ASCII --> Int
+                        digit = *(DATA + i) - '0'; //ASCII --> Int
                         fputc(digit, file);
-                        arg_digit++;
+                        printf(".");
                     }
+                    printf("\n");
+                    fclose(file);
+                    printf("Finished\n");
                 }
             }
         }
