@@ -1,4 +1,4 @@
-MCU = attiny13
+MCU = attiny13a
 #avrdude with .elf support (version 6.x) required
 AVR_PROGRAMMER = usbasp
 TARGET = main
