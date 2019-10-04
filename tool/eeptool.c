@@ -37,13 +37,13 @@ int main(int argc, char *argv[]) {
                             printf("\nNumber of digits: %d\nFinished\n", i);
                             return 0;
                         } else {
-                            digit = digit +  '0'; //Nach char umwandeln
+                            digit = digit +  '0'; //uint8_t --> ASCII
                             printf("%c", digit);
                         }
                     }
                 }
             } else {
-                fprintf(stderr, "ERROR: Incorrect using of action READ\nUsage: ./eeptool <FILE> <READ>\n");
+                fprintf(stderr, "ERROR: Incorrect using of action READ\nUsage: ./eeptool <FILE> READ\n");
                 return 1;
             }
         } else {
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
                             return 1;
                         } else {
                             printf("Writing data to %s\n", FILENAME);
-                            uint8_t digit;
+                            char digit;
                             for(int i = 0; i < length; i++) {
                                 digit = *(DATA + i) - '0'; //ASCII --> uint8_t
                                 fputc(digit, file);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
                         }
                     }
                 } else {
-                    fprintf(stderr, "ERROR: Incorrect using of action WRITE\nUsage: ./eeptool <FILE> <WRITE> <DATA>\n");
+                    fprintf(stderr, "ERROR: Incorrect using of action WRITE\nUsage: ./eeptool <FILE> WRITE <DATA>\n");
                     return 1;
                 }
             } else {
