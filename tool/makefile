@@ -7,5 +7,5 @@ all: $(TARGET)
 clean:
 	rm -f $(TARGET)
 
-eeptool:
+$(TARGET):
 	gcc $(TARGET).c -o $(TARGET)
