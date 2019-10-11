@@ -42,7 +42,7 @@
 
 #define battery_is_busy() (ADCSRA & (1 << ADSC)) //Wahr solange Messung läuft
 
-uint16_t battery_level = 0;
+volatile uint16_t battery_level = 0;
 
 ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
