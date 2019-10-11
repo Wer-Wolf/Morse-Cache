@@ -1,7 +1,9 @@
 MCU = attiny13a
+#avrdude.conf patch needed
 #avrdude with .elf support (version 6.x) required
 AVR_PROGRAMMER = usbasp
 TARGET = main
+PORT = /dev/ttyS0
 
 .PHONY: all fuse programm clean size
 
@@ -11,9 +13,9 @@ fuse: $(TARGET).elf
 	avr-objdump -s -j .fuse $(TARGET).elf
 
 programm: $(TARGET).elf
-	avrdude -c $(AVR_PROGRAMMER) -p $(MCU) -u -U flash:w:$(TARGET).elf
-	avrdude -c $(AVR_PROGRAMMER) -p $(MCU) -u -U lfuse:w:$(TARGET).elf
-	avrdude -c $(AVR_PROGRAMMER) -p $(MCU) -u -U hfuse:w:$(TARGET).elf
+	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U flash:w:$(TARGET).elf
+	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U lfuse:w:$(TARGET).elf
+	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U hfuse:w:$(TARGET).elf
 clean:
 	rm -f $(TARGET).o
 	rm -f $(TARGET).elf
