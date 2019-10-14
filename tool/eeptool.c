@@ -9,7 +9,9 @@
 #define FILENAME argv[1]
 #define ACTION argv[2]
 #define DATA argv[3]
-#define MAX_DIGITS 62
+#define MAX_DIGITS 61
+#define MAX_DATA_LENGHT 62
+#define DATA_END 0xFF
 
 /*... <FILE> <READ/WRITE> <DATA>*/
 
@@ -28,17 +30,16 @@ int main(int argc, char *argv[]) {
                 } else {
                     printf("%s sucessfully opened\n", FILENAME);
                     printf("Content of %s: ", FILENAME);
-                    int i;
-                    char digit;
-                    for(i = 0; i <= MAX_DIGITS; i++) {
-                        digit = fgetc(file);
-                        if(digit == EOF) { //Ende der Datei
+                    char file_byte;
+                    for(int i = 0; i <= MAX_DIGITS; i++) {
+                        file_byte = fgetc(file);
+                        if(file_byte == EOF) { //Ende der Datei
                             fclose(file);
                             printf("\nNumber of digits: %d\nFinished\n", i);
                             return 0;
                         } else {
-                            digit = digit +  '0'; //uint8_t --> ASCII
-                            printf("%c", digit);
+                            file_byte = file_byte +  '0'; //uint8_t --> ASCII
+                            printf("%c", file_byte);
                         }
                     }
                 }
@@ -74,6 +75,10 @@ int main(int argc, char *argv[]) {
                                 digit = *(DATA + i) - '0'; //ASCII --> uint8_t
                                 fputc(digit, file);
                                 printf(".");
+                            }
+                            for(int i = 0; i < MAX_DATA_LENGHT - length; i++) {
+                                fputc(DATA_END, file);
+                                printf("_");
                             }
                             printf("\n");
                             fclose(file);
