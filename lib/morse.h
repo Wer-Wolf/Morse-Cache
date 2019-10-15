@@ -20,7 +20,7 @@ uint8_t eeprom_get_morse_code() {
         raw_data = eeprom_read(ee_data_adress);
         if(raw_data == END_OF_DATA || ee_data_adress >= DATA_END_ADRESS) { //Ende der Daten
             morse_data = END_OF_DATA;
-            ee_data_adress = 0;
+            ee_data_adress = DATA_START_ADRESS;
         } else {
             if(raw_data > DATA_MAX) {
                 morse_data = ILLEGAL_DATA;
