@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <avr/signature.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/fuse.h>
@@ -22,10 +23,10 @@
 #define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
-#define EXTERNAL_RESET_OCCURED (reset_source & (1 << EXTRF))
-
 #define FINISHED 0
 #define RUNNING 1
+
+#define reset_occured() (MCUSR & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
 
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
@@ -68,6 +69,7 @@ ISR(WDT_vect) {
         if(wdt_cycles_off == DAH) {
             morse_code_status = FINISHED;
             wdt_off();
+            wdt_reset(); //Definierter Ausgangszustand
         }
         wdt_counter = 0;
     } else {
@@ -83,65 +85,69 @@ void sleep() {
     sleep_disable();
 }
 
+void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
+    wdt_reset(); //Definierter Ausgangszustand
+    morse_code = 0;
+    morse_code_status = RUNNING; //Muss zuvor FINISHED sein
+    wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
+    sleep();
+}
+
 int main(void) {
-    uint8_t reset_source = MCUSR;
-    MCUSR = 0;
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
     PRR |= (1 << PRTIM0); //Kein Timer
     battery_init();
     input_init();
     wdt_set(MS500);
-    if(EXTERNAL_RESET_OCCURED) { //EEPROM checken
-        color = RED;
-        uint8_t eeprom_data;
-        uint8_t eeprom_adress = DATA_START_ADRESS;
-        do {
-            eeprom_data = eeprom_read(eeprom_adress);
-            if(eeprom_data > DATA_MAX) { //Ende oder Fehler
-                if(eeprom_data == END_OF_DATA) {
-                    color = GREEN;
-                } //Sonst Fehler (RED)
-                break;
-            } else {
-                eeprom_adress++;
-            }
-        } while(eeprom_adress <= DATA_END_ADRESS);
-        set_led(color);
-        morse_code_status = RUNNING;
-        wdt_on(); //Beended sich durch morse_code = 0 sofort
-        sleep();
-        wdt_reset();
-        clear_led(color);
-    }
     while(1) {
-        wait_for_input();
         battery_start_measuring();
-        clear_led(GREEN); //Falls Kalibrierung stattgefunden hat
         set_sleep_mode(SLEEP_MODE_ADC);
         sleep();
-        if(check_for_calibration() == CALIBRATION_NEEDED) {
-            eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
-            sleep();
-            set_led(GREEN);
+        if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
+            color = RED;
         } else {
-            if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
-                color = RED;
-            } else {
-                color = GREEN;
-            }
-            set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+            color = GREEN;
+        }
+        set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+        if(reset_occured()) { //EEPROM checken
+            MCUSR = 0; //Check wird nur einmal ausgeführt
+            uint8_t eeprom_data;
+            uint8_t eeprom_adress = DATA_START_ADRESS;
             do {
-                morse_code = eeprom_get_morse_code();
-                if(morse_code == END_OF_DATA) {
+                eeprom_data = eeprom_read(eeprom_adress);
+                if(eeprom_data > DATA_MAX) { //Ende oder Fehler
+                    if(eeprom_data == END_OF_DATA) {
+                        set_led(color); //Check erfolgreich (Ende)
+                        wait();
+                        clear_led(color);
+                    }
                     break;
+                } else {
+                    eeprom_adress++;
                 }
-                morse_code_status = RUNNING;
-                wdt_on();
-                while(morse_code_status != FINISHED) {
-                    sleep();
-                }
-            } while(1);
-        } 
+            } while(eeprom_adress <= DATA_END_ADRESS);
+        } else { //Morsecode
+            if(check_for_calibration() == CALIBRATION_NEEDED) {
+                eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
+                sleep(); //Interrupt wird benötigt
+                set_led(color);
+                wait();
+                clear_led(color);
+            } else {
+                do {
+                    morse_code = eeprom_get_morse_code();
+                    if(morse_code == END_OF_DATA) {
+                        break;
+                    }
+                    morse_code_status = RUNNING;
+                    wdt_on();
+                    while(morse_code_status != FINISHED) {
+                        sleep();
+                    }
+                } while(1);
+            }
+        }
+        wait_for_input();
     }
     return 0;
 }
