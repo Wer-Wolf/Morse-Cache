@@ -7,7 +7,7 @@
 
     - Configurable battery warning
 
-    - Automatic self-test after reset
+    - Automatic self-test after reset and poweron
 
     - Low space and power consumption
 
@@ -37,22 +37,20 @@
            (whose voltage sets the new limit, from which the battery is considered "empty")
         
         2. Holding the calibration button while triggering the magnetic switch.
+            --> If the Morsecode sequence is displayed, repeat step 2 after the end of the sequence.
+                (first hold the button, then trigger the magnetic switch)
 
-        3. If the Morsecode sequence is displayed, repeat 2. after the end of the sequence.
-           (first hold the button, then trigger the magnetic switch)
+        3. Release the button when the LED lights up briefly.
+            --> if the LED does not light up briefly, check volatge source and repeat step 2
 
-        4. Release the button when the LED shine continuously green and trigger the magnetic switch again.
-           (The Morsecode sequence is displayed as a "test" again)
-
-        5. Device is ready for use.
+        4. Device is ready for use.
 
     - Issuing the self-test:
         1. Press the reset button
             --> The Morse-Cache must not be in the calibration process.
-        2. The LED lights up briefly:
-            Green: self-test succesful.
 
-            Red: a error was found.
+        2. If the LED lights up briefly, the self-test succesful.
+           (Else the Morse-Cache may be defective)
 
             --> A defective Morse-Cache should be repaired before used again.
 
@@ -87,7 +85,7 @@
             - Only numbers between 0x00 and 0x09 (0-9) are accepted data values
             - Invaild data will be ignored
 
-    - Battery calibration:
+    - Battery calibration data:
 
         - Adresses:
 
@@ -103,7 +101,7 @@
 
     - Konfigurierbarer Batteriewarner
 
-    - Automatischer Selbsttest nach einem Reset
+    - Automatischer Selbsttest nach Einschalten oder einem Reset
 
     - Niedriger Platz- und Stromverbrauch
 
@@ -133,22 +131,20 @@
            (dessen Spannung stellt die neue Grenze da, ab der die Batterie als "leer" gilt)
         
         2. Halten des Kalibrierungstasters bei gleichzeitigem Auslösen des Magnetschalters.
+            --> Sollte ein Morsecode ausgegeben werden, Schritt 2 nach Ende der Ausgabe wiederholen.
+                (erst Taster halten, danach Magnetschalter auslösen)
 
-        3. Sollte ein Morsecode ausgegeben werden, 2. nach Ende der Ausgabe wiederholen.
-           (erst Taster halten, danach Magnetschalter auslösen)
+        3. Taster loslassen wenn LED kurz aufleuchted.
+           (Schritt 2 wiederholen wenn die LED nicht kurz aufleuchted)
 
-        4. Taster loslassen wenn LED durchweg Grün leuchtet und Magnetschalter nochmals auslösen.
-           (Die Morsesequenz läuft dadurch "als Test" nochmals ab)
-
-        5. Gerät ist einsatzbereit.
+        4. Gerät ist einsatzbereit.
 
     - Selbsttest starten:
         1. Resetknopf betätigen
             --> Der Morse-Cache darf sich nicht im Kalibrierungsvorgang befinden.
-        2. LED leuchtet kurz auf:
-            Grün: Selbsttest erfolgreich.
 
-            Rot: Es wurde ein Fehler gefunden.
+        2. Wenn die LED kurz aufleuchted, war der Selbsttest erfolgreich:
+           (Andernfalls könnte der Morse-Cache fehlerhaft sein)
 
             --> Ein fehlerhafter Morse-Cache sollte nicht ohne Reparatur verwendet werden.
 
@@ -183,7 +179,7 @@
             - Nur die Nummern 0x00 bis 0x09 (0-9) werden aktzeptiert
             - ungültige Daten werden ignoriert
 
-    - Batterie Kalibrierung:
+    - Batteriekalibrierungdaten:
 
         - Adressem:
             Highbyte: 0x3F
