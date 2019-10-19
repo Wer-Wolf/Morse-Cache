@@ -108,8 +108,8 @@ int main(void) {
         } else {
             color = GREEN;
         }
-        set_sleep_mode(SLEEP_MODE_PWR_DOWN);
         if(reset_occured()) { //EEPROM checken
+            set_sleep_mode(SLEEP_MODE_PWR_DOWN);
             MCUSR = 0; //Check wird nur einmal ausgeführt
             uint8_t eeprom_data;
             uint8_t eeprom_adress = DATA_START_ADRESS;
@@ -134,6 +134,7 @@ int main(void) {
                 wait();
                 clear_led(color);
             } else {
+                set_sleep_mode(SLEEP_MODE_PWR_DOWN);
                 do {
                     morse_code = eeprom_get_morse_code();
                     if(morse_code == END_OF_DATA) {
