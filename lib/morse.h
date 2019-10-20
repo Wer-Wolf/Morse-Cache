@@ -10,7 +10,6 @@
 #define DIT 1
 #define DAH 3
 
-//#define convert_to_morse(data) (((uint8_t) ((0xFC1F >> data) & 0x1F)) | (1 << 5))
 #define convert_to_morse(data) (((uint8_t) (((0xFE0F << data) & 0x3E00) >> 9)) | (1 << 5))
 
 uint8_t eeprom_get_morse_code() {
