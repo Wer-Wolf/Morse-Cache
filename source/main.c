@@ -37,15 +37,19 @@ static volatile uint8_t color = 0;
 static volatile uint8_t morse_code = 0;
 static volatile uint8_t morse_code_status = FINISHED;
 
+static inline void morse_code_end() {
+    morse_code_status = FINISHED;
+    wdt_off();
+    wdt_reset(); //Definierter Ausgangszustand
+}
+
 ISR(WDT_vect) {
     static uint8_t wdt_counter = 0;
     static uint8_t wdt_cycles_on = 0;
     static uint8_t wdt_cycles_off = 0;
     if(wdt_counter == 0) {
         if(morse_code <= 1) { //Illegale Daten
-            morse_code_status = FINISHED;
-            wdt_off();
-            wdt_reset(); //Definierter Ausgangszustand
+            morse_code_end();
             return;
         } else {
             if(morse_code & (1 << 0)) { //dah
@@ -69,9 +73,7 @@ ISR(WDT_vect) {
     }
     if(wdt_counter > wdt_cycles_on + wdt_cycles_off) { //Periode beendet
         if(wdt_cycles_off == DAH) {
-            morse_code_status = FINISHED;
-            wdt_off();
-            wdt_reset(); //Definierter Ausgangszustand
+            morse_code_end();
         }
         wdt_counter = 0;
     } else {
@@ -79,7 +81,7 @@ ISR(WDT_vect) {
     }
 }
 
-void sleep() {
+static void sleep() {
     sleep_enable();
     NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
         sleep_cpu();
@@ -87,7 +89,7 @@ void sleep() {
     sleep_disable();
 }
 
-void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
+static void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
     wdt_reset(); //Definierter Ausgangszustand
     morse_code = 0;
     morse_code_status = RUNNING; //Muss zuvor FINISHED sein
