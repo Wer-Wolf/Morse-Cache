@@ -81,7 +81,7 @@ ISR(WDT_vect) {
     }
 }
 
-static void sleep() {
+static inline void sleep() {
     sleep_enable();
     NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
         sleep_cpu();
@@ -89,7 +89,7 @@ static void sleep() {
     sleep_disable();
 }
 
-static void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
+static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
     wdt_reset(); //Definierter Ausgangszustand
     morse_code = 0;
     morse_code_status = RUNNING; //Muss zuvor FINISHED sein
