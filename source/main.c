@@ -45,6 +45,8 @@ ISR(WDT_vect) {
         if(morse_code <= 1) { //Illegale Daten
             morse_code_status = FINISHED;
             wdt_off();
+            wdt_reset(); //Definierter Ausgangszustand
+            return;
         } else {
             if(morse_code & (1 << 0)) { //dah
                 wdt_cycles_on = DAH;
