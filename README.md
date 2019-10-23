@@ -71,7 +71,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
         
 ***Only possible with programming adapter***
 
-1. Check [Releases](releases) for new version.
+1. Check [releases](www.github.com/Wer-Wolf/Morse-Cache/releases) for new version.
 
 2. Downloading the newest version (*.elf*).
 
@@ -136,7 +136,7 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 
 ## **Authors:**
 
-* **Armin W.** [Wer-Wolf](www.github.com/Wer-Wolf)
+* **Armin W.** [(Wer-Wolf)](www.github.com/Wer-Wolf)
 
 ## **Acknowledgments:**
 
