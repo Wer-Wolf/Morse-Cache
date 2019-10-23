@@ -16,25 +16,25 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * Triggered by magnets (through a reed switch)
 
-* Configurable battery warning (See **Usage**)
+* Configurable battery warning (*See* **Usage**)
 
-* Automatic self-test after reset and poweron (See **Usage**)
+* Automatic self-test after reset and poweron (*See* **Usage**)
 
 * Low space and power consumption
 
-* Runs with 2x AA or 2x AAA batteries (recommended)
+* Runs with 2x AA or 2x AAA batteries (*recommended*)
 
 ## **Usage:**
 
 ### **Trigger the Morse-Cache:**
 
-1. Hold the magnet over the magnetic switch (long component).
+1. Hold the magnet over the magnetic switch (*reed contact*).
 
 2. When Morse sequence is displayed, remove magnet.
 
 3. After the Morse sequence has finished, the device can be triggered again.
 
-* Color of the LED (should be noted in the listing of the geocache):
+* Color of the LED (*should be noted in the listing of the geocache*):
 
     * **Green**: Normal color of the LED
 
@@ -43,7 +43,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 ### **Adjust the battery warning:**
 
 1. Connect the circuit to a stable voltage source between 2,2V and 3V.
-   (whose voltage sets the new limit, from which the battery is considered "empty")
+   (*whose voltage sets the new limit, from which the battery is considered "empty"*)
     
 2. Holding the calibration button while triggering the magnetic switch.
 
@@ -66,6 +66,22 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 2. If the LED lights up briefly, the self-test succesful (else the internal EEPROM memory of the Morse-Cache may be defective).
 
 ***A defective Morse-Cache should be repaired before used again!***
+
+### **Building the device firmware:**
+
+1. Clone the Git Repository.
+
+2. Type ```cd source```.
+
+3. Building the firmware using ```make all```.
+
+4. Use ```make size``` to check the size of the binary (*max 1024 on ATtiny13/A*).
+
+5. Use ```make fuse``` to check the fuse values (*usually* ```2afd```).
+
+6. Use ```make programm``` to flash the firmware with avrdude (*you may need to adjust* ```AVR_PROGRAMMER``` *and* ```PORT```).
+
+7. Use ```make clean``` to clean up.
         
 ### **Updating the device firmware:**
         
@@ -75,7 +91,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 2. Downloading the newest version (*.elf*).
 
-3. Extract and flash the *.elf* file with a programming adapter (USBasp, ...).
+3. Extract and flash the *.elf* file with a programming adapter (*USBasp, ...*).
 
 ### **Changing the Morse sequence:**
 
@@ -93,7 +109,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * **ATtiny13**
 
-* **ATtiny13A** *recommended*
+* **ATtiny13A** (*recommended*)
 
 ### **Fuses (ATiny13/A):**
 
@@ -107,12 +123,12 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * **Start:** ```0x00```
     
-* **End (maximum):** ```0x3D```
+* **End (*maximum*):** ```0x3D```
 
 #### **Characteristics:**
 
-* The string must be terminated (at ```0x3D``` at the latest) with ```0xFF```.
-* Only numbers between ```0x00``` and ```0x09``` (0-9) are accepted data values.
+* The string must be terminated (*at* ```0x3D``` *at the latest*) with ```0xFF```.
+* Only numbers between ```0x00``` and ```0x09``` (*0-9*) are accepted data values.
     
 ***Invaild data will be ignored!***
 
