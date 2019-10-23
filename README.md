@@ -63,7 +63,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ***The Morse-Cache must not be in the calibration process***
 
-2. If the LED lights up briefly, the self-test succesful (else the internal EEPROM memory of the Morse-Cache may be defective).
+2. If the LED lights up briefly, the self-test succesful (*else the internal EEPROM memory of the Morse-Cache may be defective*).
 
 ***A defective Morse-Cache should be repaired before used again!***
 

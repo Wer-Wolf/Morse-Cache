@@ -1,6 +1,6 @@
 # **eeptool:**
 
-* Read/Write EEPROM files for the morse cache
+* Read/Write EEPROM files for the Morse-Cache
 
 * Creates a binary file (*.bin*)
 
