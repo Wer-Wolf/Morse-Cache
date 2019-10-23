@@ -116,106 +116,11 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
     
 ***Invaild data will be ignored!***
 
-#### **Battery warning mechanism:**
+## **Battery warning mechanism:**
 
 * The current ADC output is compared with the value inside the EEPROM. 
 
-##### **EEPROM adresses:**
+#### **EEPROM adresses:**
 
 * high byte: ```0x3F```
 * low byte: ```0x3E```
-
-1. Features:
-    - Ausgeben einer Morsesequenz aus maximal 61 Nummern.
-
-    - Beibehalten der Morsesequenz nach Firmwareupdates
-
-    - Auslösung durch Magneten
-
-    - Konfigurierbarer Batteriewarner
-
-    - Automatischer Selbsttest nach Einschalten oder einem Reset
-
-    - Niedriger Platz- und Stromverbrauch
-
-    - Läuft mit 2x AA oder 2x AAA Batterien
-
-    - Perfekt für Multicaches
-
-1. Benutzung:
-
-    - Auslösen:
-        1. Magneten über den Magnetschalter (langes Bauteil) halten.
-
-        2. Morsesequenz läuft, Magnet entfernen.
-
-        3. Nach Ende der Morsesequenz ist das Gerät wieder einsatzbereit.
-
-    - Farbe der LED:
-        - Grün: Normale Farbe der LED.
-
-        - Rot: Batterie niedrig, Batterie sollte gewechselt werden.
-               (Am bessten im Listing darauf hinweißen)
-
-2. Wartung:
-
-    - Kalibrierung der Grenze für die Batteriewarnung:
-        1. Schaltung mit stabiler Spannungsquelle zwichen 2,2V und 3V verbinden.
-           (dessen Spannung stellt die neue Grenze da, ab der die Batterie als "leer" gilt)
-        
-        2. Halten des Kalibrierungstasters bei gleichzeitigem Auslösen des Magnetschalters.
-            --> Sollte ein Morsecode ausgegeben werden, Schritt 2 nach Ende der Ausgabe wiederholen.
-                (erst Taster halten, danach Magnetschalter auslösen)
-
-        3. Taster loslassen wenn LED kurz aufleuchted.
-           (Schritt 2 wiederholen wenn die LED nicht kurz aufleuchted)
-
-        4. Gerät ist einsatzbereit.
-
-    - Selbsttest starten:
-        1. Resetknopf betätigen
-            --> Der Morse-Cache darf sich nicht im Kalibrierungsvorgang befinden.
-
-        2. Wenn die LED kurz aufleuchted, war der Selbsttest erfolgreich:
-           (Andernfalls könnte der Morse-Cache fehlerhaft sein)
-
-            --> Ein fehlerhafter Morse-Cache sollte nicht ohne Reparatur verwendet werden.
-
-    - Update der Firmware:
-        --> Nur mit Programmieradapter möglich
-        1. Auf www.github.com/Wer-Wolf/Morse-Cache/releases nach neuerer Version schauen.
-
-        2. Download der neusten Version (.zip).
-
-        3. Extrahieren und .hex-Datei mit Programmieradapter flashen.
-
-    - Ändern der Morsesequenz:
-
-        - Nur mit Programmieradapter möglich. :-(
-            --> Genaueres bei "Entwickler"
-
-3. Entwickler:
-
-    - Fuses:
-        -hfuse: 0xFD
-
-        -lfuse: 0x2A
-
-    - Morsezeichen:
-
-        - Adressen:
-
-            - Start: 0x00
-            - Ende (maximal): 0x3D
-
-            - Die Zeichenkette muss (spätestens bei 0x3D) mit 0xFF abgeschlossen werden
-            - Nur die Nummern 0x00 bis 0x09 (0-9) werden aktzeptiert
-            - ungültige Daten werden ignoriert
-
-            !Wenn eine neue Morsecode-Sequenz in den EEPROM geladen wurde, muss das Gerät erneut kalibriert werden!
-
-    - Batteriekalibrierungdaten:
-
-        - Adressem:
-            Highbyte: 0x3F
-            Lowbyte: 0x3E
