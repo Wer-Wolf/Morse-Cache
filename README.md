@@ -71,7 +71,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
         
 ***Only possible with programming adapter***
 
-1. Check for new [version]((https://github.com/Wer-Wolf/Morse-Cache/releases).
+1. Check for new [version](https://github.com/Wer-Wolf/Morse-Cache/releases).
 
 2. Downloading the newest version (*.elf*).
 
@@ -136,8 +136,8 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 
 ## **Authors:**
 
-* **Armin W.** [Wer-Wolf]((https://github.com/Wer-Wolf)
+* **Armin W.** [Wer-Wolf](https://github.com/Wer-Wolf)
 
 ## **Acknowledgments:**
 
-* The idea how to store the morse code was discovered in the [Mikrokontroller.net Forum]((https://mikrocontroller.net/topic/171196).
+* The idea how to store the morse code was discovered in the [Mikrokontroller.net Forum](https://mikrocontroller.net/topic/171196).
