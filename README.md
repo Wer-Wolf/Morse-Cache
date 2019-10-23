@@ -10,9 +10,9 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * Output a morse code sequence
 
-- Sequence consists of a maximum of 61 numbers
+    * Sequence consists of a maximum of 61 numbers
 
-- Preservation through firmware updates
+    * Preservation through firmware updates
 
 * Triggered by magnets (through a reed switch)
 
@@ -36,9 +36,9 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * Color of the LED (should be noted in the listing of the geocache):
 
-- **Green**: Normal color of the LED
+    * **Green**: Normal color of the LED
 
-- **Red**: Battery low, should be replaced
+    * **Red**: Battery low, should be replaced
 
 ### **Adjust the battery warning:**
 
@@ -51,7 +51,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 3. Release the calibration button when the LED lights up briefly.
 
-* If the LED does not light up briefly, check volatge source and repeat step 2.
+    * If the LED does not light up briefly, check volatge source and repeat step 2.
 
 ***Releasing the magnetic switch after the LED goes out will display the morse code sequence***
 
