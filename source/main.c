@@ -2,6 +2,7 @@
 #include <avr/signature.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
+#include <avr/power.h>
 #include <avr/fuse.h>
 #include <util/atomic.h>
 
@@ -99,7 +100,7 @@ static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_cod
 
 int main(void) {
     DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
-    PRR |= (1 << PRTIM0); //Kein Timer
+    power_timer0_disable();
     battery_init();
     input_init();
     wdt_set(MS500);
