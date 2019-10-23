@@ -1,6 +1,6 @@
 # **The Morse-Cache**
 
----
+
 
 ## **Description:**
 
@@ -124,3 +124,20 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * high byte: ```0x3F```
 * low byte: ```0x3E```
+
+## **Built with:**
+
+* ```avr-gcc``` - compiler
+* ```avr-libc``` - runtime libary
+* ```avrdude``` - programming software
+
+## **License:**
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
+
+## **Authors:**
+
+* **[Wer-Wolf]**(https://github.com/Wer-Wolf)
+
+## **Acknowledgments:**
+
+* The idea how to store the morse code was discovered in the [Mikrokontroller.net Forum](https://www.mikrocontroller.net/topic/171196).
