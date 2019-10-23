@@ -1,12 +1,12 @@
-#**The Morse-Cache**
+# **The Morse-Cache**
 
 ---
 
-##**Description:**
+## **Description:**
 
 Make your geocache more interesting with the **Morse-Cache**!. When triggered, it outputs a sequence of numbers in morse code. The **Morse-Cache** also indicates via an adjustable battery warning when his batteries should be replaced. Besides this, the **Morse-Cache** is low power and fits even in small cases. Perfect for multicaches!
 
-##**Features:**
+## **Features:**
 
 * Output a morse code sequence
 
@@ -24,9 +24,9 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * Runs with 2x AA or 2x AAA batteries (recommended)
 
-##**Usage:**
+## **Usage:**
 
-###**Trigger the Morse-Cache:**
+### **Trigger the Morse-Cache:**
 
 1. Hold the magnet over the magnetic switch (long component).
 
@@ -40,7 +40,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 - **Red**: Battery low, should be replaced
 
-###**Adjust the battery warning:**
+### **Adjust the battery warning:**
 
 1. Connect the circuit to a stable voltage source between 2,2V and 3V.
    (whose voltage sets the new limit, from which the battery is considered "empty")
@@ -57,7 +57,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 4. Device is ready for use.
 
-###**Issuing the self-test:**
+### **Issuing the self-test:**
 
 1. Press the reset button.
 
@@ -67,7 +67,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ***A defective Morse-Cache should be repaired before used again!***
         
-###**Updating the device firmware:**
+### **Updating the device firmware:**
         
 ***Only possible with programming adapter***
 
@@ -77,7 +77,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 3. Extract and flash the *.elf* file with a programming adapter (USBasp, ...).
 
-###**Changing the Morse sequence:**
+### **Changing the Morse sequence:**
 
 ***Only possible with programming adapter***
 
@@ -87,40 +87,40 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ***You may readjust the baterry warning***
 
-##**Additional notes:**
+## **Additional notes:**
 
-###**Supported Devices:**
+### **Supported Devices:**
 
 * **ATtiny13**
 
 * **ATtiny13A** *recommended*
 
-###**Fuses (ATiny13/A):**
+### **Fuses (ATiny13/A):**
 
 * **hfuse:** ```0xFD```
 
 * **lfuse:** ```0x2A```
 
-###**Morse code characteristics:**
+### **Morse code characteristics:**
 
-####**EEPROM addresses:**
+#### **EEPROM addresses:**
 
 * **Start:** ```0x00```
     
 * **End (maximum):** ```0x3D```
 
-####**Characteristics:**
+#### **Characteristics:**
 
 * The string must be terminated (at ```0x3D``` at the latest) with ```0xFF```.
 * Only numbers between ```0x00``` and ```0x09``` (0-9) are accepted data values.
     
 ***Invaild data will be ignored!***
 
-####**Battery warning mechanism:**
+#### **Battery warning mechanism:**
 
 * The current ADC output is compared with the value inside the EEPROM. 
 
-#####**EEPROM adresses:**
+##### **EEPROM adresses:**
 
 * high byte: ```0x3F```
 * low byte: ```0x3E```
