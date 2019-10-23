@@ -1,6 +1,7 @@
 #pragma once
 
 #include <avr/interrupt.h>
+#include <avr/power.h>
 
 #ifndef ADC_PRESCALER_SELECT_BITS
     #error ADC_PRESCALER_SELECT_BITS not defined
@@ -48,7 +49,7 @@ ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
     battery_level = ADC;
     ADCSRA &= ~(1 << ADEN);
-    PRR |= (1 << PRADC);
+    power_adc_disable(); 
 }
 
 inline void battery_init() {
@@ -56,12 +57,12 @@ inline void battery_init() {
     DIDR0 |= (1 << DID_VALUE);
     ADMUX |= (1 << REFS0) | (MUX_SELECT_BITS << MUX0); //1,1V
     ADCSRA |= (1 << ADIE) | (ADC_PRESCALER_SELECT_BITS << ADPS0);
-    PRR |= (1 << PRADC);
+    power_adc_disable();
 }
 
 void battery_start_measuring() {
     if(!battery_is_busy()) { //Messung wird nicht unnötig neugestarted
-        PRR &= ~(1 << PRADC);
+        power_adc_enable();
         PORTB |= (1 << PULLUP_ENABLE_PIN);
         ADCSRA |= (1 << ADEN) | (1 << ADSC);
     }
