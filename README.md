@@ -73,13 +73,13 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 2. Type ```cd source```.
 
-3. Building the firmware using ```make all```.
+3. Building the firmware with **avr-gcc** using ```make all```.
 
 4. Use ```make size``` to check the size of the binary (*max 1024 on ATtiny13/A*).
 
 5. Use ```make fuse``` to check the fuse values (*usually* ```2afd```).
 
-6. Use ```make programm``` to flash the firmware with avrdude (*you may need to adjust* ```AVR_PROGRAMMER``` *and* ```PORT```).
+6. Use ```make programm``` to flash the firmware with **avrdude** (*you may need to adjust* ```AVR_PROGRAMMER``` *and* ```PORT```).
 
 7. Use ```make clean``` to clean up.
         
