@@ -16,6 +16,7 @@
 ISR(PCINT0_vect) {
     PCMSK &= ~(1 << INPUT_PIN);
     PORTB &= ~(1 << INPUT_PIN);
+    GIFR |= (1 << PCIF); //Eventuelles Prellen kompensieren
 }
 
 inline void wait_for_input() { //Interrupts müssen zuvor deaktiviert sein
