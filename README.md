@@ -1,98 +1,128 @@
-1. Features:
-    - Output a Morsecode sequence consisting of a maximum of 61 numbers
+#**The Morse-Cache**
 
-    - Preservation of the Morsecode sequence through firmware updates
+---
 
-    - Can be triggered by magnets
+##**Description:**
 
-    - Configurable battery warning
+    Make your geocache more interesting with the **Morse-Cache**!. When triggered, it outputs a sequence of numbers in morse code. The **Morse-Cache** also indicates via an adjustable battery warning when his batteries should be replaced. Besides this, the **Morse-Cache** is low power and fits even in small cases. Perfect for multicaches!
 
-    - Automatic self-test after reset and poweron
+##**Features:**
 
-    - Low space and power consumption
+    * Output a morse code sequence
+        * Sequence consists of a maximum of 61 numbers
 
-    - Runs with 2x AA or 2x AAA batteries
+        * Preservation through firmware updates
 
-    - Perfect for multicaches
+    * Triggered by magnets (through a reed switch)
 
-1. Usage:
+    * Configurable battery warning (See **Usage**)
 
-    - trigger the circuit:
-        1. Hold the magnet over the magnetic switch (long component).
+    * Automatic self-test after reset and poweron (See **Usage**)
 
-        2. When Morse sequence is displayed, remove magnet.
+    * Low space and power consumption
 
-        3. After the Morse sequence has finished, the device can be triggered again.
+    * Runs with 2x AA or 2x AAA batteries (recommended)
 
-    - Color of the LED:
-        - Green: Normal color of the LED.
+##**Usage:**
 
-        - Red: Battery low, should be replaced.
-               (should be noted in the listing of the cache)
+###**Trigger the Morse-Cache:**
 
-2. Maintenance:
+    1. Hold the magnet over the magnetic switch (long component).
 
-    - Calibration of the limit for the battery warning:
-        1. Connect the circuit to a stable voltage source between 2,2V and 3V.
-           (whose voltage sets the new limit, from which the battery is considered "empty")
+    2. When Morse sequence is displayed, remove magnet.
+
+    3. After the Morse sequence has finished, the device can be triggered again.
+
+    * Color of the LED (should be noted in the listing of the geocache):
+
+        * **Green**: Normal color of the LED
+
+        * **Red**: Battery low, should be replaced
+
+###**Adjust the battery warning:**
+
+    1. Connect the circuit to a stable voltage source between 2,2V and 3V.
+       (whose voltage sets the new limit, from which the battery is considered "empty")
+    
+    2. Holding the calibration button while triggering the magnetic switch.
+
+        ***If the morse code sequence is displayed, repeat step 2 after the end of the sequence (first hold the button, then trigger the magnetic switch)***
+
+    3. Release the calibration button when the LED lights up briefly.
+
+        * If the LED does not light up briefly, check volatge source and repeat step 2.
+
+        ***Releasing the magnetic switch after the LED goes out will display the morse code sequence***
+
+    4. Device is ready for use.
+
+###**Issuing the self-test:**
+
+    1. Press the reset button
+
+        *The Morse-Cache must not be in the calibration process.
+
+    2. If the LED lights up briefly, the self-test succesful (else the internal EEPROM memory of the Morse-Cache may be defective).
+
+        ***A defective Morse-Cache should be repaired before used again!***
         
-        2. Holding the calibration button while triggering the magnetic switch.
-            --> If the Morsecode sequence is displayed, repeat step 2 after the end of the sequence.
-                (first hold the button, then trigger the magnetic switch)
+###**Updating the device firmware:**
+        
+    ***Only possible with programming adapter***
 
-        3. Release the button when the LED lights up briefly.
-            --> if the LED does not light up briefly, check volatge source and repeat step 2
+    1. Check [Releases](www.github.com/Wer-Wolf/Morse-Cache/releases) for new version.
 
-        4. Device is ready for use.
+    2. Downloading the newest version (*.elf*).
 
-    - Issuing the self-test:
-        1. Press the reset button
-            --> The Morse-Cache must not be in the calibration process.
+    3. Extract and flash the *.elf* file with a programming adapter (USBasp, ...).
 
-        2. If the LED lights up briefly, the self-test succesful.
-           (Else the Morse-Cache may be defective)
+###**Changing the Morse sequence:**
 
-            --> A defective Morse-Cache should be repaired before used again.
+    ***Only possible with programming adapter***
 
-    - Updating the device firmware:
-        --> Only possible with programming adapter
-        1. Check www.github.com/Wer-Wolf/Morse-Cache/releases for new version.
+    1. Use the **eeptool** for creating the desired morse code sequence.
 
-        2. Downloading the newest version (.zip).
+    2. Burn the resulting *.bin* file in the EEPROM of the **Morse-Cache**.
 
-        3. Extract and flash .hex file with programming adapter.
+    ***You may readjust the baterry warning***
 
-    - Changing the Morse sequence:
+##**Additional notes:**
 
-        - Only possible with programming adapter. :-(
-            -> See "Developer" for details
+###**Supported Devices:**
 
-3. Developer:
+    * **ATtiny13**
 
-    - Fuses:
-        -hfuse: 0xFD
+    * **ATtiny13A** *recommended*
 
-        -lfuse: 0x2A
+###**Fuses (ATiny13/A):**
 
-    - Morsecode:
+    * **hfuse:** ```0xFD```
 
-        - Addresses:
+    * **lfuse:** ```0x2A```
 
-            - Start: 0x00
-            - End (maximum): 0x3D
+###**Morse code characteristics:**
 
-            - The string must be terminated (at 0x3D at the latest) with 0xFF
-            - Only numbers between 0x00 and 0x09 (0-9) are accepted data values
-            - Invaild data will be ignored
+####**EEPROM addresses:**
 
-            !When uploading a new morse sequence to the eeprom, the device should be calibrated again!
+    * **Start:** ```0x00```
+    
+    * **End (maximum):** ```0x3D```
 
-    - Battery calibration data:
+####**Characteristics:**
 
-        - Adresses:
+    * The string must be terminated (at ```0x3D``` at the latest) with ```0xFF```.
+    * Only numbers between ```0x00``` and ```0x09``` (0-9) are accepted data values.
+    
+    *Invaild data will be ignored!*
 
-            high byte: 0x3F
-            low byte: 0x3E
+####**Battery warning mechanism:**
+
+    * The current ADC output is compared with the value inside the EEPROM. 
+
+#####**EEPROM adresses:**
+
+    * high byte: ```0x3F```
+    * low byte: ```0x3E```
 
 1. Features:
     - Ausgeben einer Morsesequenz aus maximal 61 Nummern.
