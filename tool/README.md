@@ -1,10 +1,10 @@
 # **eeptool:**
 
-* Read/Write EEPROM files for the Morse-Cache
+* Read/Create EEPROM files for the Morse-Cache
 
 * Creates a binary file (*.bin*)
 
-***The binary provided with the release is comiled and tested for Linux!***
+***The binary provided with the release is compiled and tested for Linux!***
 
 # **Usage:**
 
@@ -15,6 +15,16 @@
     ```./eeptool <FILE> WRITE <DATA>```
         
     * When finished, upload the binary file to the ATtiny13/A's **EEPROM**
+
+### **Building from source:**
+
+1. Clone the Git Repository.
+
+2. Type ```cd tool```.
+
+3. Building the binary with **gcc** using ```make all```.
+
+4. Use ```make clean``` to clean up.
 
 ## **Built with:**
 
