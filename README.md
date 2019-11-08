@@ -30,7 +30,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 1. Hold the magnet over the magnetic switch (*reed contact*).
 
-2. When Morse sequence is displayed, remove magnet.
+2. When the Morse sequence is displayed, remove magnet.
 
 3. After the Morse sequence has finished, the device can be triggered again.
 
@@ -51,9 +51,9 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 3. Release the calibration button when the LED lights up briefly.
 
-    * If the LED does not light up briefly, check volatge source and repeat step 2.
+    * If the LED does not light up briefly, check voltage source and repeat step 2.
 
-***Releasing the magnetic switch after the LED goes out will display the morse code sequence***
+***Releasing the magnetic switch after the LED goes off will display the morse code sequence***
 
 4. Device is ready for use.
 
@@ -63,7 +63,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ***The Morse-Cache must not be in the calibration process***
 
-2. If the LED lights up briefly, the self-test succesful (*else the internal EEPROM memory of the Morse-Cache may be defective*).
+2. If the LED lights up briefly, the self-test was succesful (*else the internal EEPROM memory of the Morse-Cache may be defective*).
 
 ***A defective Morse-Cache should be repaired before used again!***
 
@@ -119,7 +119,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ### **Morse code characteristics:**
 
-#### **EEPROM addresses:**
+#### **EEPROM address range:**
 
 * **Start:** ```0x00```
     
@@ -136,7 +136,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 * The current ADC output is compared with the value inside the EEPROM. 
 
-#### **EEPROM adresses:**
+#### **EEPROM adress range:**
 
 * high byte: ```0x3F```
 * low byte: ```0x3E```
@@ -156,4 +156,4 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 
 ## **Acknowledgments:**
 
-* The idea how to store the morse code was discovered in the [Mikrokontroller.net Forum](https://mikrocontroller.net/topic/171196).
+* The idea how to store the morse code was discovered in the [Mikrocontroller.net Forum](https://mikrocontroller.net/topic/171196).
