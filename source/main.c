@@ -28,7 +28,7 @@
 #define RUNNING 1
 
 #define reset_occured() (mcusr_mirror & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
-//mcusr_mirror from wdt.h
+//mcusr_mirror von wdt.h
 
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
