@@ -21,7 +21,7 @@ uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
 
 void wdt_reset_handler(void) __attribute__((naked)) __attribute__((section(".init3")));
 
-void wdt_reset_handler(void) {
+void wdt_reset_handler(void) { //Empfehlung des Datenblatts
     mcusr_mirror = MCUSR;
     MCUSR = 0x00;
     WDTCR = (1 << WDCE) | (1 << WDE);
