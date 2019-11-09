@@ -53,10 +53,10 @@ ISR(ADC_vect) {
 }
 
 inline void battery_init() {
-    ACSR |= (1 << ACD); //Stromsparen
-    DIDR0 |= (1 << DID_VALUE);
-    ADMUX |= (1 << REFS0) | (MUX_SELECT_BITS << MUX0); //1,1V
-    ADCSRA |= (1 << ADIE) | (ADC_PRESCALER_SELECT_BITS << ADPS0);
+    ACSR = (1 << ACD); //Stromsparen
+    DIDR0 = (1 << DID_VALUE);
+    ADMUX = (1 << REFS0) | (MUX_SELECT_BITS << MUX0); //1,1V
+    ADCSRA = (1 << ADIE) | (ADC_PRESCALER_SELECT_BITS << ADPS0);
     power_adc_disable();
 }
 
