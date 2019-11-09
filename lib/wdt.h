@@ -17,6 +17,17 @@
 #define wdt_on()  WDTCR |= (1 << WDTIE); //ISR!
 #define wdt_off() WDTCR &= ~(1 << WDTIE);
 
+uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
+
+void wdt_reset_handler(void) __attribute__((naked)) __attribute__((section(".init3")));
+
+void wdt_reset_handler(void) {
+    mcusr_mirror = MCUSR;
+    MCUSR = 0x00;
+    WDTCR = (1 << WDCE) | (1 << WDE);
+    WDTCR = 0x00;
+}
+
 inline void wdt_set(uint8_t time) {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         wdt_reset(); //Definierter WDT-Stand
