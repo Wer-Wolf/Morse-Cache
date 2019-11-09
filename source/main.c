@@ -115,7 +115,7 @@ int main(void) {
             color = GREEN;
         }
         if(reset_occured()) { //EEPROM checken
-            MCUSR = 0x00; //Check wird nur einmal ausgeführt
+            mcusr_mirror = 0x00; //Check wird nur einmal ausgeführt
             set_sleep_mode(SLEEP_MODE_PWR_DOWN);
             uint8_t eeprom_data;
             uint8_t eeprom_adress = DATA_START_ADRESS;
