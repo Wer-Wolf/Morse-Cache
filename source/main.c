@@ -27,7 +27,8 @@
 #define FINISHED 0
 #define RUNNING 1
 
-#define reset_occured() (MCUSR & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
+#define reset_occured() (mcusr_mirror & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
+//mcusr_mirror from wdt.h
 
 FUSES = {
     .low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
@@ -99,7 +100,7 @@ static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_cod
 }
 
 int main(void) {
-    DDRB |= (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
+    DDRB = (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
     power_timer0_disable();
     battery_init();
     input_init();
@@ -114,8 +115,8 @@ int main(void) {
             color = GREEN;
         }
         if(reset_occured()) { //EEPROM checken
+            MCUSR = 0x00; //Check wird nur einmal ausgeführt
             set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-            MCUSR = 0; //Check wird nur einmal ausgeführt
             uint8_t eeprom_data;
             uint8_t eeprom_adress = DATA_START_ADRESS;
             do {
