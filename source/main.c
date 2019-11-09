@@ -1,5 +1,4 @@
 #include <avr/io.h>
-#include <avr/signature.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
