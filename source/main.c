@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <avr/signature.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
@@ -35,11 +36,14 @@ FUSES = {
 };
 
 static volatile uint8_t color = 0;
-static volatile uint8_t morse_code = 0;
-static volatile uint8_t morse_code_status = FINISHED;
+
+static volatile struct morse_code {
+    uint8_t value;
+    uint8_t status;
+} morse_code = {0, FINISHED};
 
 static inline void morse_code_end() {
-    morse_code_status = FINISHED;
+    morse_code.status = FINISHED;
     wdt_off();
     wdt_reset(); //Definierter Ausgangszustand
 }
@@ -48,36 +52,38 @@ ISR(WDT_vect) {
     static struct watchdog {
         uint8_t counter;
         struct cycles {
-            uint8_t on;
-            uint8_t off;
+            uint8_t active;
+            uint8_t idle;
         } cycles;
     } wdt = {0, {0, 0}};
     if(wdt.counter == 0) {
-        if(morse_code <= 1) { //Illegale Daten
+        if(morse_code.value <= 1) { //Illegale Daten
             morse_code_end();
             return;
         } else {
-            if(morse_code & (1 << 0)) { //dah
-                wdt.cycles.on = DAH;
+            morse_code.status = RUNNING; //Start
+            //Benötigt einen Durchlauf zum aktualisieren!
+            if(morse_code.value & (1 << 0)) { //dah
+                wdt.cycles.active = DAH;
             } else { //dit
-                wdt.cycles.on = DIT;
+                wdt.cycles.active = DIT;
             }
-            morse_code >>= 1;
-            if(morse_code == 1) { //Ende des Buchstabens
-                wdt.cycles.off = DAH;
+            morse_code.value >>= 1;
+            if(morse_code.value == 1) { //Ende des Buchstabens
+                wdt.cycles.idle = DAH;
             } else {
-                wdt.cycles.off = DIT;
+                wdt.cycles.idle = DIT;
             }
         }
     } else {
-        if(wdt.counter <= wdt.cycles.on) {
+        if(wdt.counter <= wdt.cycles.active) {
             set_led(color);
         } else {
             clear_led(color);
         }
     }
-    if(wdt.counter > wdt.cycles.on + wdt.cycles.off) { //Periode beendet
-        if(wdt.cycles.off == DAH) {
+    if(wdt.counter >= wdt.cycles.active + wdt.cycles.idle) { //Periode beendet
+        if(wdt.cycles.idle == DAH) {
             morse_code_end();
         }
         wdt.counter = 0;
@@ -96,8 +102,8 @@ static inline void sleep() {
 
 static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
     wdt_reset(); //Definierter Ausgangszustand
-    morse_code = 0;
-    morse_code_status = RUNNING; //Muss zuvor FINISHED sein
+    morse_code.value = 0;
+    //morse_code.status muss zuvor FINISHED sein
     wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
     sleep();
 }
@@ -145,15 +151,14 @@ int main(void) {
             } else {
                 set_sleep_mode(SLEEP_MODE_PWR_DOWN);
                 do {
-                    morse_code = eeprom_get_morse_code();
-                    if(morse_code == END_OF_DATA) {
+                    morse_code.value = eeprom_get_morse_code();
+                    if(morse_code.value == END_OF_DATA) {
                         break;
                     }
-                    morse_code_status = RUNNING;
                     wdt_on();
-                    while(morse_code_status != FINISHED) {
-                        sleep();
-                    }
+                    do {
+                        sleep(); //morse_code.status aktualisieren
+                    } while(morse_code.status != FINISHED);
                 } while(1);
             }
         }
