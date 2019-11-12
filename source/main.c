@@ -45,40 +45,44 @@ static inline void morse_code_end() {
 }
 
 ISR(WDT_vect) {
-    static uint8_t wdt_counter = 0;
-    static uint8_t wdt_cycles_on = 0;
-    static uint8_t wdt_cycles_off = 0;
-    if(wdt_counter == 0) {
+    static struct watchdog {
+        uint8_t counter;
+        struct cycles {
+            uint8_t on;
+            uint8_t off;
+        } cycles;
+    } wdt = {0, {0, 0}};
+    if(wdt.counter == 0) {
         if(morse_code <= 1) { //Illegale Daten
             morse_code_end();
             return;
         } else {
             if(morse_code & (1 << 0)) { //dah
-                wdt_cycles_on = DAH;
+                wdt.cycles.on = DAH;
             } else { //dit
-                wdt_cycles_on = DIT;
+                wdt.cycles.on = DIT;
             }
             morse_code >>= 1;
             if(morse_code == 1) { //Ende des Buchstabens
-                wdt_cycles_off = DAH;
+                wdt.cycles.off = DAH;
             } else {
-                wdt_cycles_off = DIT;
+                wdt.cycles.off = DIT;
             }
         }
     } else {
-        if(wdt_counter <= wdt_cycles_on) {
+        if(wdt.counter <= wdt.cycles.on) {
             set_led(color);
         } else {
             clear_led(color);
         }
     }
-    if(wdt_counter > wdt_cycles_on + wdt_cycles_off) { //Periode beendet
-        if(wdt_cycles_off == DAH) {
+    if(wdt.counter > wdt.cycles.on + wdt.cycles.off) { //Periode beendet
+        if(wdt.cycles.off == DAH) {
             morse_code_end();
         }
-        wdt_counter = 0;
+        wdt.counter = 0;
     } else {
-        wdt_counter++;
+        wdt.counter++;
     }
 }
 
