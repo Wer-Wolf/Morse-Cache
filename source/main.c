@@ -42,6 +42,30 @@ static volatile struct morse_code {
     uint8_t status;
 } morse_code = {0, FINISHED};
 
+struct watchdog {
+    uint8_t counter;
+    struct cycles {
+        uint8_t active;
+        uint8_t idle;
+    } cycles;
+};
+
+static inline void sleep() {
+    sleep_enable();
+    NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
+        sleep_cpu();
+    }
+    sleep_disable();
+}
+
+static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
+    wdt_reset(); //Definierter Ausgangszustand
+    morse_code.value = 0;
+    //morse_code.status muss zuvor FINISHED sein
+    wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
+    sleep();
+}
+
 static inline void morse_code_end() {
     morse_code.status = FINISHED;
     wdt_off();
@@ -49,13 +73,7 @@ static inline void morse_code_end() {
 }
 
 ISR(WDT_vect) {
-    static struct watchdog {
-        uint8_t counter;
-        struct cycles {
-            uint8_t active;
-            uint8_t idle;
-        } cycles;
-    } wdt = {0, {0, 0}};
+    static struct watchdog wdt = {0, {0, 0}};
     if(wdt.counter == 0) {
         if(morse_code.value <= 1) { //Illegale Daten
             morse_code_end();
@@ -90,22 +108,6 @@ ISR(WDT_vect) {
     } else {
         wdt.counter++;
     }
-}
-
-static inline void sleep() {
-    sleep_enable();
-    NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-        sleep_cpu();
-    }
-    sleep_disable();
-}
-
-static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
-    wdt_reset(); //Definierter Ausgangszustand
-    morse_code.value = 0;
-    //morse_code.status muss zuvor FINISHED sein
-    wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
-    sleep();
 }
 
 int main(void) {
