@@ -1,7 +1,8 @@
 #pragma once
 
 #include <avr/wdt.h>
-#include <util/atomic.h> //-std=gnu99
+#include <avr/interrupt.h>
+#include <util/atomic.h> //c99
 
 #define MS16 0
 #define MS32 1
@@ -14,7 +15,7 @@
 #define S4 32
 #define S8 33
 
-#define wdt_on()  WDTCR |= (1 << WDTIE); //ISR!
+#define wdt_on()  WDTCR |= (1 << WDTIE);
 #define wdt_off() WDTCR &= ~(1 << WDTIE);
 
 uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
@@ -27,6 +28,8 @@ void wdt_reset_handler(void) { //Empfehlung des Datenblatts
     WDTCR = (1 << WDCE) | (1 << WDE);
     WDTCR = 0x00;
 }
+
+extern ISR(WDT_vect); //ISR wird benötigt!
 
 inline void wdt_set(uint8_t time) {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
