@@ -4,6 +4,7 @@ MCU = attiny13a
 AVR_PROGRAMMER = usbasp
 TARGET = main
 PORT = /dev/ttyS0
+STANDARD = c11
 
 .PHONY: all fuse programm clean size
 
@@ -25,7 +26,7 @@ size: $(TARGET).elf
 	avr-size --mcu=$(MCU) $(TARGET).elf
 
 $(TARGET).o: $(TARGET).c
-	avr-gcc -Os -c -Wall -std=c99 -mmcu=$(MCU) -o $(TARGET).o $(TARGET).c
+	avr-gcc -Os -c -Wall -std=$(STANDARD) -mmcu=$(MCU) -o $(TARGET).o $(TARGET).c
 
 $(TARGET).elf: $(TARGET).o
 	avr-gcc -mmcu=$(MCU) -o $(TARGET).elf $(TARGET).o
