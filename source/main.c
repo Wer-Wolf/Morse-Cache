@@ -24,9 +24,6 @@
 #define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
-#define FINISHED 0
-#define RUNNING 1
-
 #define reset_occured() (mcusr_mirror & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
 //mcusr_mirror von wdt.h
 
@@ -39,7 +36,7 @@ static volatile uint8_t color = 0;
 
 static volatile struct morse_code {
     uint8_t value;
-    uint8_t status;
+    enum {FINISHED, RUNNING} status; //-fshort-enums
 } morse_code = {0, FINISHED};
 
 struct watchdog {
