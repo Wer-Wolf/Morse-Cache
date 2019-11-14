@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
                         if(file_byte == EOF) { //Ende der Datei
                             fclose(file);
                             printf("\nNumber of digits: %d\nFinished\n", i);
-                            return 0;
+                            break;
                         } else {
                             file_byte = file_byte +  '0'; //uint8_t --> ASCII
                             printf("%c", file_byte);
