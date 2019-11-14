@@ -1,3 +1,5 @@
+#include <stdint.h> //c99
+
 #include <avr/io.h>
 #include <avr/signature.h>
 #include <avr/interrupt.h>
