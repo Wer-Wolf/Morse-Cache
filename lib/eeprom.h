@@ -1,13 +1,15 @@
 #pragma once
 
-#include <util/atomic.h> //-std=gnu99
+#include <util/atomic.h> //c99
 #include <avr/interrupt.h>
 
 #define eeprom_is_busy() (EECR & (1 << EEPE))
 #define ee_interrupt_is_pending() (EECR & (1 << EERIE))
 
-static volatile uint8_t ee_high_byte = 0;
-static volatile uint8_t ee_high_adress = 0;
+static volatile struct eeprom {
+    uint8_t high_byte;
+    uint8_t high_adress;
+} eeprom = {0, 0};
 
 //Das Aufrufen einer der Funktionen bei deaktivierten Interrupts darf nur erfolgen, wenn kein EE-Interrupt aussteht
 
@@ -34,7 +36,7 @@ void eeprom_write(uint8_t adress, uint8_t data) {
 
 ISR(EE_RDY_vect) {
     EECR &= ~(1 << EERIE); //Power-Down
-    eeprom_write(ee_high_adress, ee_high_byte);
+    eeprom_write(eeprom.high_adress, eeprom.high_byte);
 }
 
 uint16_t eeprom_read_word(uint8_t adress) {
@@ -47,8 +49,8 @@ uint16_t eeprom_read_word(uint8_t adress) {
 void eeprom_write_word(uint8_t adress, uint16_t word) {
     while(ee_interrupt_is_pending()); //Vermeidet Race-Condition
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        ee_high_adress = adress + 1; //Wort brauch ZWEI Adressen!
-        ee_high_byte = (uint8_t) (word >> 8);
+        eeprom.high_adress = adress + 1; //Wort brauch ZWEI Adressen!
+        eeprom.high_byte = (uint8_t) (word >> 8);
         eeprom_write(adress, (uint8_t) word);
         EECR |= (1 << EERIE); //Idle/ADC-Mode
     } //Interrupts müssen eingeschalten werden, um Operation zu beenden
