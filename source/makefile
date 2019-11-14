@@ -5,9 +5,11 @@ PORT = /dev/ttyS0
 STANDARD = c11
 ADDITION = -fshort-enums #Important for code-size!
 
-.PHONY: all fuse programm clean size
+.PHONY: all hex fuse programm clean size
 
-all: $(TARGET).hex
+all: $(TARGET).elf
+
+hex: $(TARGET).hex
 
 fuse: $(TARGET).elf
 	avr-objdump -s -j .fuse $(TARGET).elf
