@@ -38,12 +38,11 @@
     #endif
 #endif
 
-#define CALIBRATION_NEEDED 0
-#define NO_CALIBRATION 1
-
 #define battery_is_busy() (ADCSRA & (1 << ADSC)) //Wahr solange Messung läuft
 
 volatile uint16_t battery_level = 0;
+
+enum check {CALIBRATION_NEEDED, NO_CALIBRATION}; //-fshort-enums
 
 ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
@@ -68,7 +67,7 @@ void battery_start_measuring() {
     }
 }
 
-uint8_t check_for_calibration() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
+enum check check_for_calibration() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
     PORTB &= ~(1 << PULLUP_ENABLE_PIN); //Falls gerade eine Messung läuft
     DDRB &= ~(1 << PULLUP_ENABLE_PIN);
     uint8_t calibration_pin_state = PINB & (1 << PULLUP_ENABLE_PIN);
