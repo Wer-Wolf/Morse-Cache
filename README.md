@@ -73,8 +73,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 2. Type ```cd source```.
 
-3. Building the firmware with **avr-gcc** using ```make all```.
-   (Use ```make hex``` to generate a Ihex-file)
+3. Building the firmware with **avr-gcc** using ```make all``` (Use ```make hex``` to generate a Ihex-file).
 
 4. Use ```make size``` to check the size of the binary (*max 1024 on ATtiny13/A*).
 
