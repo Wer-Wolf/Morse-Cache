@@ -4,16 +4,8 @@
 #include <avr/interrupt.h>
 #include <util/atomic.h> //c99
 
-#define MS16 0
-#define MS32 1
-#define MS64 2
-#define MS125 3
-#define MS250 4
-#define MS500 5
-#define S1 6
-#define S2 7
-#define S4 32
-#define S8 33
+enum watchdog_timeout_values {S8 = 33, S4 = 32, S2 = 7, S1 = 6,
+    MS500 = 5, MS250 = 4, MS125 = 3, MS64 = 2, MS32 = 1, MS16 = 0}; //-fshort-enums
 
 #define wdt_on()  WDTCR |= (1 << WDTIE);
 #define wdt_off() WDTCR &= ~(1 << WDTIE);
@@ -31,7 +23,7 @@ void wdt_reset_handler(void) { //Empfehlung des Datenblatts
 
 extern ISR(WDT_vect); //ISR wird benötigt!
 
-inline void wdt_set(uint8_t time) {
+inline void wdt_set(enum watchdog_timeout_values time) {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         wdt_reset(); //Definierter WDT-Stand
         WDTCR |= (1 << WDCE);
