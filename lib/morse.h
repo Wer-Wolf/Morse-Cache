@@ -3,14 +3,16 @@
 #include "../lib/eeprom.h"
 #include "../util/adress.h"
 
-#define END_OF_DATA 0xFF
+#define END_OF_DATA 0x00
 #define ILLEGAL_DATA 0
-#define DATA_MAX 9
+#define DATA_MIN 0x30
+#define DATA_MAX 0x39
+#define DATA_OFFSET 0x30
 
 #define DIT 1
 #define DAH 3
 
-#define convert_to_morse(data) (((uint8_t) (((0xFE0F << data) & 0x3E00) >> 9)) | (1 << 5))
+#define convert_to_morse(data) (((uint8_t) (((0xFE0F << (data)) & 0x3E00) >> 9)) | (1 << 5))
 
 uint8_t eeprom_get_morse_code() {
     static uint8_t ee_data_adress = DATA_START_ADRESS;
@@ -22,10 +24,10 @@ uint8_t eeprom_get_morse_code() {
             morse_data = END_OF_DATA;
             ee_data_adress = DATA_START_ADRESS;
         } else {
-            if(raw_data > DATA_MAX) {
+            if(raw_data > DATA_MAX || raw_data < DATA_MIN) { //Invalid ASCII character
                 morse_data = ILLEGAL_DATA;
             } else {
-                morse_data = convert_to_morse(raw_data);
+                morse_data = convert_to_morse(raw_data - DATA_OFFSET);
             }
             ee_data_adress++;
         }
