@@ -4,10 +4,12 @@
 #include "../util/adress.h"
 
 #define END_OF_DATA 0x00
-#define ILLEGAL_DATA 0
-#define DATA_MIN 0x30
-#define DATA_MAX 0x39
+#define ILLEGAL_DATA 0xFF
+#define DATA_MIN 0x30 //"0"
+#define DATA_MAX 0x39 //"9"
 #define DATA_OFFSET 0x30
+
+#define is_illegal_data(data) ((data) > DATA_MAX || (data) < DATA_MIN)
 
 #define DIT 1
 #define DAH 3
@@ -24,7 +26,7 @@ uint8_t eeprom_get_morse_code() {
             morse_data = END_OF_DATA;
             ee_data_adress = DATA_START_ADRESS;
         } else {
-            if(raw_data > DATA_MAX || raw_data < DATA_MIN) { //Invalid ASCII character
+            if(is_illegal_data(raw_data)) { //Invalid ASCII character
                 morse_data = ILLEGAL_DATA;
             } else {
                 morse_data = convert_to_morse(raw_data - DATA_OFFSET);
