@@ -11,11 +11,12 @@
 #define DATA argv[3]
 #define MAX_DIGITS 61
 #define MAX_DATA_LENGHT 62
-#define DATA_END 0xFF
+#define DATA_END 0x00
 
 /*... <FILE> <READ/WRITE> <DATA>*/
 
 int main(int argc, char *argv[]) {
+    printf("eeptool version 1.1\n\n");
     if(argc < ARGS_COUNT_MIN) {
         fprintf(stderr, "ERROR: Too few arguments\nUsage: ./eeptool <FILE> <READ/WRITE> <DATA>\n");
         return 1;
@@ -30,10 +31,10 @@ int main(int argc, char *argv[]) {
                 } else {
                     printf("%s sucessfully opened\n", FILENAME);
                     printf("Content of %s: ", FILENAME);
-                    char file_byte;
+                    int file_byte;
                     for(int i = 0; i <= MAX_DIGITS; i++) {
-                        file_byte = fgetc(file);
-                        if(file_byte == EOF) { //Ende der Datei
+                        //file_byte = fgetc(file);
+                        if((file_byte = fgetc(file)) == EOF) { //Ende der Datei
                             fclose(file);
                             printf("\nNumber of digits: %d\nFinished\n", i);
                             break;
