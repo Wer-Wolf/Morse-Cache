@@ -131,7 +131,7 @@ int main(void) {
             uint8_t eeprom_adress = DATA_START_ADRESS;
             do {
                 eeprom_data = eeprom_read(eeprom_adress);
-                if(eeprom_data > DATA_MAX) { //Ende oder Fehler
+                if(is_illegal_data(eeprom_data)) { //Ende oder Fehler
                     if(eeprom_data == END_OF_DATA) {
                         set_led(color); //Check erfolgreich (Ende)
                         wait();
