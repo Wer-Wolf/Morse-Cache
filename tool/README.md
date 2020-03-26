@@ -4,17 +4,20 @@
 
 * Creates a binary file (*.bin*)
 
-***The binary provided with the release is compiled and tested for Linux!***
+***The binary provided with the release is compiled and tested for Linux and Windows 10!***
 
 # **Usage:**
 
 * Read a morse-code sequence from a given binary file:
-    ```./eeptool <FILE> READ```
+    ```eeptool read <file>```
 
 * Write a morse-code sequence to a binary file:
-    ```./eeptool <FILE> WRITE <DATA>```
+    ```eeptool write <file> <data>```
         
     * When finished, upload the binary file to the ATtiny13/A's **EEPROM**
+
+* Display a simple summary about the eeptool:
+    ```eeptool help```
 
 ### **Building from source:**
 
