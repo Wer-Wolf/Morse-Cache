@@ -1,11 +1,15 @@
 #include <ctype.h>
-#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
+#define EEPTOOL_VERSION "1.1"
+#define EEPTOOL_LICENSE "GNU General Public License v3.0"
+#define MORSE_CACHE_WEBSITE "github.com/Wer-Wolf/Morse-Cache"
+
 #define ARGS_COUNT_READ 3
 #define ARGS_COUNT_WRITE 4
-#define ARGS_COUNT_MIN ARGS_COUNT_READ
+#define ARGS_COUNT_HELP 2 //Ignored to simplify the usage of the help page
+#define ARGS_COUNT_MIN 2
 #define ACTION argv[1]
 #define FILENAME argv[2]
 #define DATA argv[3]
@@ -21,9 +25,8 @@
 /*... <FILE> <READ/WRITE> <DATA>*/
 
 int main(int argc, char *argv[]) {
-    printf("eeptool v1.1\n\n");
     if(argc < ARGS_COUNT_MIN) {
-        fprintf(stderr, "ERROR: Too few arguments\nUsage: eeptool <read/write> <file> <data>\n");
+        fprintf(stderr, "ERROR: Too few arguments\nUse 'eeptool help' to learn about possible arguments\n");
         return 1;
     } else {
         if(strcmp(ACTION, "read") == 0) {
@@ -111,8 +114,17 @@ int main(int argc, char *argv[]) {
                     return 1;
                 }
             } else {
-                fprintf(stderr, "ERROR: Unknown action %s\n", ACTION);
-                return 1;
+                if(strcmp(ACTION, "help") == 0) {
+                    printf("eeptool version %s build on %s %s \n", EEPTOOL_VERSION, __DATE__, __TIME__);
+                    printf("This programm is is licensed under the %s\n", EEPTOOL_LICENSE);
+                    printf("Visit %s to learn more about the purpose of this programm\n\n", MORSE_CACHE_WEBSITE);
+                    printf("To create a eeprom file containing a sequence of numbers, use\neeptool <write> <file> <data>\n\n");
+                    printf("To create a sequence of numbers from a eeprom file, use\neeptool <read> <file>\n\n");
+                    printf("To display a simple summary about this programm, use\neeptool help\n");
+                } else {
+                    fprintf(stderr, "ERROR: Unknown action %s\nUse 'eeptool help' to learn about possible actions\n", ACTION);
+                    return 1;
+                }
             }
         }
     }
