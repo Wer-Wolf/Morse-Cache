@@ -2,7 +2,7 @@
 
 * Read/Create EEPROM files for the Morse-Cache
 
-* Creates a binary file (*.bin*)
+* Creates a binary file for burning into the eeprom of the ATiny13/A
 
 ***The binary provided with the release is compiled and tested for Linux and Windows 10!***
 
@@ -14,7 +14,7 @@
 * Write a morse-code sequence to a binary file:
     ```eeptool write <file> <data>```
         
-    * When finished, upload the binary file to the ATtiny13/A's **EEPROM**
+    * When finished, upload the binary file to the ATtiny13/A's **eeprom**
 
 * Display a simple summary about the eeptool:
     ```eeptool help```
