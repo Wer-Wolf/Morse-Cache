@@ -23,7 +23,7 @@
 int main(int argc, char *argv[]) {
     printf("eeptool v1.1\n\n");
     if(argc < ARGS_COUNT_MIN) {
-        fprintf(stderr, "ERROR: Too few arguments\nUsage: ./eeptool <read/write> <file> <data>\n");
+        fprintf(stderr, "ERROR: Too few arguments\nUsage: eeptool <read/write> <file> <data>\n");
         return 1;
     } else {
         if(strcmp(ACTION, "read") == 0) {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
                     printf("Finished\n");
                 }
             } else {
-                fprintf(stderr, "ERROR: Incorrect using of action 'read'\nUsage: ./eeptool read <file>\n");
+                fprintf(stderr, "ERROR: Incorrect using of action 'read'\nUsage: eeptool read <file>\n");
                 return 1;
             }
         } else {
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
                         }
                     }
                 } else {
-                    fprintf(stderr, "ERROR: Incorrect using of action 'write'\nUsage: ./eeptool write <file> <data>\n");
+                    fprintf(stderr, "ERROR: Incorrect using of action 'write'\nUsage: eeptool write <file> <data>\n");
                     return 1;
                 }
             } else {
