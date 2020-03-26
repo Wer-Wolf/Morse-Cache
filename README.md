@@ -99,7 +99,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 1. Use the **eeptool** for creating the desired morse code sequence.
 
-2. Burn the resulting *.bin* file in the EEPROM of the **Morse-Cache**.
+2. Burn the resulting binary file in the EEPROM of the **Morse-Cache**.
 
 ***You may readjust the baterry warning***
 
@@ -127,14 +127,14 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 #### **Characteristics:**
 
-* The string must be terminated (*at* ```0x3D``` *at the latest*) with ```0xFF```.
-* Only numbers between ```0x00``` and ```0x09``` (*0-9*) are accepted data values.
+* The string must be terminated (*at adress* ```0x3D``` *at the latest*) with ```0x00```.
+* Only numbers between ```0x30``` and ```0x39``` (*0-9*) are accepted data values.
     
 ***Invaild data will be ignored!***
 
 ## **Battery warning mechanism:**
 
-* The current ADC output is compared with the value inside the EEPROM. 
+* The current ADC output is compared with the value inside the eeprom. 
 
 #### **EEPROM adress range:**
 
@@ -148,7 +148,7 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 * ```avrdude``` - programming software
 
 ## **License:**
-This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) file for details
 
 ## **Authors:**
 
