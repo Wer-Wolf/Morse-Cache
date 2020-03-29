@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define EEPTOOL_VERSION "1.1"
+#define EEPTOOL_VERSION "2.0"
 #define EEPTOOL_LICENSE "GNU General Public License v3.0"
 #define MORSE_CACHE_WEBSITE "github.com/Wer-Wolf/Morse-Cache"
 
