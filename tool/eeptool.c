@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
             if(strcmp(ACTION, "write") == 0) {
                 if(argc == ARGS_COUNT_WRITE) { //Argumente korrekt
                     if(strlen(DATA) > MAX_DIGITS) {
-                        fprintf(stderr, "ERROR: Too much data, maximum is %d\n", MAX_DIGITS);
+                        fprintf(stderr, "ERROR: Too much numbers, maximum is %d\n", MAX_DIGITS);
                         return 1;
                     } else {
                         int length = strlen(DATA);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
                         FILE *file;
                         file = fopen(FILENAME, "w");
                         if(file == NULL) {
-                            fprintf(stderr, "ERROR: Could not access %s\n", FILENAME);
+                            fprintf(stderr, "ERROR: Could not access file '%s'\n", FILENAME);
                             return 1;
                         } else {
                             printf("Writing data to %s\n", FILENAME);
@@ -119,10 +119,10 @@ int main(int argc, char *argv[]) {
                     printf("This programm is is licensed under the %s\n", EEPTOOL_LICENSE);
                     printf("Visit %s to learn more about the purpose of this programm\n\n", MORSE_CACHE_WEBSITE);
                     printf("To create a eeprom file containing a sequence of numbers, use\neeptool <write> <file> <data>\n\n");
-                    printf("To create a sequence of numbers from a eeprom file, use\neeptool <read> <file>\n\n");
+                    printf("To extract a sequence of numbers from a eeprom file, use\neeptool <read> <file>\n\n");
                     printf("To display a simple summary about this programm, use\neeptool help\n");
                 } else {
-                    fprintf(stderr, "ERROR: Unknown action %s\nUse 'eeptool help' to learn about possible actions\n", ACTION);
+                    fprintf(stderr, "ERROR: Unknown action '%s'\nUse 'eeptool help' to learn about possible actions\n", ACTION);
                     return 1;
                 }
             }
