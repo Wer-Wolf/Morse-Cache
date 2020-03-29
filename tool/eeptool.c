@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
                 FILE *file;
                 file = fopen(FILENAME, "r");
                 if(file == NULL) {
-                    fprintf(stderr, "ERROR: Could not read %s\n", FILENAME);
+                    fprintf(stderr, "ERROR: Could not read file '%s'\n", FILENAME);
                     return 1;
                 } else {
-                    printf("%s sucessfully opened\n", FILENAME);
-                    printf("Content of %s: ", FILENAME);
+                    printf("File '%s' sucessfully opened\n", FILENAME);
+                    printf("Content of '%s': ", FILENAME);
                     int file_content = 0;
                     char byte = 0;
                     int digit_count = 0;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
                             fprintf(stderr, "ERROR: Could not access file '%s'\n", FILENAME);
                             return 1;
                         } else {
-                            printf("Writing data to %s\n", FILENAME);
+                            printf("Writing data to file '%s'\n", FILENAME);
                             char digit;
                             for(int i = 0; i < length; i++) {
                                 digit = *(DATA + i); //Get char
