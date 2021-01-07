@@ -129,20 +129,18 @@ int main(void) {
 			mcusr_mirror = 0x00; //Check wird nur einmal ausgeführt
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 			uint8_t eeprom_data;
-			uint8_t eeprom_adress = DATA_START_ADRESS;
-			do {
-				eeprom_data = eeprom_read(eeprom_adress);
+			for(uint8_t eeprom_address = DATA_START_ADRESS; eeprom_address <= DATA_END_ADRESS; eeprom_address++) {
+				eeprom_data = eeprom_read(eeprom_address);
 				if(is_illegal_data(eeprom_data)) { //Ende oder Fehler
-					if(eeprom_data == END_OF_DATA) {
-						set_led(color); //Check erfolgreich (Ende)
+					if(eeprom_data == END_OF_DATA) { //Check erfolgreich
+						set_led(color);
 						wait();
 						clear_led(color);
 					}
 					break;
-				} else {
-					eeprom_adress++;
 				}
-			} while(eeprom_adress <= DATA_END_ADRESS);
+			}
+
 		} else { //Morsecode
 			if(check_for_calibration() == CALIBRATION_NEEDED) {
 				eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
