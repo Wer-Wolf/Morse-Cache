@@ -128,6 +128,7 @@ int main(void) {
 			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
 			sleep(); //Interrupt wird benötigt
 			set_led(color);
+			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 			wait();
 			clear_led(color);
 		} else {
