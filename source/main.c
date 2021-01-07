@@ -147,16 +147,20 @@ int main(void) {
 				clear_led(color);
 			} else {
 				set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-				do {
-					morse_code.value = eeprom_get_morse_code();
-					if(morse_code.value == END_OF_DATA) {
+				for(uint8_t eeprom_address = DATA_START_ADRESS; eeprom_address < DATA_END_ADRESS; eeprom_address++) {
+					morse_code.value = eeprom_read(eeprom_address);
+					if(morse_code.value == END_OF_DATA) { //Ende
 						break;
 					}
+					if(is_illegal_data(morse_code.value)) { //Überspringen bei Fehler
+						continue;
+					}
+					morse_code.value = convert_to_morse(morse_code.value - DATA_OFFSET);
 					wdt_on();
 					do {
 						sleep(); //morse_code.running aktualisieren
 					} while(morse_code.running != false);
-				} while(1);
+				}
 			}
 		}
 		wait_for_input();
