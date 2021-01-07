@@ -1,4 +1,5 @@
 #include <stdint.h> //c99
+#include <stdbool.h>
 
 #include <avr/io.h>
 #include <avr/signature.h>
@@ -38,8 +39,8 @@ static volatile uint8_t color = 0;
 
 static volatile struct morse_code {
     uint8_t value;
-    enum {FINISHED, RUNNING} status; //-fshort-enums
-} morse_code = {0, FINISHED};
+    bool running;
+} morse_code = {0, false};
 
 struct watchdog {
     uint8_t counter;
@@ -60,13 +61,13 @@ static inline void sleep() {
 static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
     wdt_reset(); //Definierter Ausgangszustand
     morse_code.value = 0;
-    //morse_code.status muss zuvor FINISHED sein
+    //morse_code.running muss zuvor false sein
     wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
     sleep();
 }
 
 static inline void morse_code_end() {
-    morse_code.status = FINISHED;
+    morse_code.running = false;
     wdt_off();
     wdt_reset(); //Definierter Ausgangszustand
 }
@@ -78,7 +79,7 @@ ISR(WDT_vect) {
             morse_code_end();
             return;
         } else {
-            morse_code.status = RUNNING; //Start
+            morse_code.running = true; //Start
             //Benötigt einen Durchlauf zum aktualisieren!
             if(morse_code.value & (1 << 0)) { //dah
                 wdt.cycles.active = DAH;
@@ -158,8 +159,8 @@ int main(void) {
                     }
                     wdt_on();
                     do {
-                        sleep(); //morse_code.status aktualisieren
-                    } while(morse_code.status != FINISHED);
+                        sleep(); //morse_code.running aktualisieren
+                    } while(morse_code.running != false);
                 } while(1);
             }
         }
