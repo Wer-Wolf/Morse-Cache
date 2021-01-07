@@ -108,6 +108,8 @@ ISR(WDT_vect) {
 }
 
 int main(void) {
+	uint8_t eeprom_data = 0;
+
 	DDRB = (1 << PULLUP_ENABLE_PIN) | (1 << RED_LED_PIN) | (1 << GREEN_LED_PIN);
 	power_timer0_disable();
 	battery_init();
@@ -122,46 +124,40 @@ int main(void) {
 		} else {
 			color = GREEN;
 		}
-		if(mcusr_mirror) { //MCU wurde zurückgesetzt, EEPROM checken
-			mcusr_mirror = 0x00; //Check wird nur einmal ausgeführt
+		if(check_for_calibration() == CALIBRATION_NEEDED) {
+			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
+			sleep(); //Interrupt wird benötigt
+			set_led(color);
+			wait();
+			clear_led(color);
+		} else {
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-			uint8_t eeprom_data;
 			for(uint8_t eeprom_address = DATA_START_ADRESS; eeprom_address <= DATA_END_ADRESS; eeprom_address++) {
 				eeprom_data = eeprom_read(eeprom_address);
-				if(is_illegal_data(eeprom_data)) { //Ende oder Fehler
-					if(eeprom_data == END_OF_DATA) { //Check erfolgreich
-						set_led(color);
-						wait();
-						clear_led(color);
-					}
-					break;
-				}
-			}
-
-		} else { //Morsecode
-			if(check_for_calibration() == CALIBRATION_NEEDED) {
-				eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
-				sleep(); //Interrupt wird benötigt
-				set_led(color);
-				wait();
-				clear_led(color);
-			} else {
-				set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-				for(uint8_t eeprom_address = DATA_START_ADRESS; eeprom_address < DATA_END_ADRESS; eeprom_address++) {
-					morse_code.value = eeprom_read(eeprom_address);
-					if(morse_code.value == END_OF_DATA) { //Ende
+				if(mcusr_mirror) {//MCU wurde zurückgesetzt, EEPROM checken
+					if(is_illegal_data(eeprom_data)) { //Ende oder Fehler
+						if(eeprom_data == END_OF_DATA) { //Check erfolgreich
+							set_led(color);
+							wait();
+							clear_led(color);
+						}
 						break;
 					}
-					if(is_illegal_data(morse_code.value)) { //Überspringen bei Fehler
+				} else { //Morsecode anzeigen
+					if(eeprom_data == END_OF_DATA) { //Ende
+						break;
+					}
+					if(is_illegal_data(eeprom_data)) { //Überspringen bei Fehler
 						continue;
 					}
-					morse_code.value = convert_to_morse(morse_code.value - DATA_OFFSET);
+					morse_code.value = convert_to_morse(eeprom_data - DATA_OFFSET);
 					wdt_on();
 					do {
 						sleep(); //morse_code.running aktualisieren
 					} while(morse_code.running != false);
 				}
 			}
+			mcusr_mirror = 0x00; //Check wird nur einmal durchlaufen
 		}
 		wait_for_input();
 	}
