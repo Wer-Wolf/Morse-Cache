@@ -27,9 +27,6 @@
 #define GREEN_LED_PIN PB1 //OC0B
 #include "../lib/led.h"
 
-#define reset_occured() (mcusr_mirror & ((1 << WDRF) | (1 << BORF) | (1 << EXTRF) | (1 << PORF)))
-//mcusr_mirror von wdt.h
-
 FUSES = {
 	.low = (FUSE_SPIEN & FUSE_EESAVE & FUSE_CKDIV8 & FUSE_SUT0 & FUSE_CKSEL0),
 	.high = (FUSE_BODLEVEL0),
@@ -125,7 +122,7 @@ int main(void) {
 		} else {
 			color = GREEN;
 		}
-		if(reset_occured()) { //EEPROM checken
+		if(mcusr_mirror) { //MCU wurde zurückgesetzt, EEPROM checken
 			mcusr_mirror = 0x00; //Check wird nur einmal ausgeführt
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 			uint8_t eeprom_data;
