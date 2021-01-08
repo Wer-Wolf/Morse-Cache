@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <avr/interrupt.h>
 #include <avr/power.h>
 
@@ -42,8 +43,6 @@
 
 volatile uint16_t battery_level = 0;
 
-enum check {CALIBRATION_NEEDED, NO_CALIBRATION}; //-fshort-enums
-
 ISR(ADC_vect) {
     PORTB &= ~(1 << PULLUP_ENABLE_PIN);
     battery_level = ADC;
@@ -67,14 +66,14 @@ void battery_start_measuring() {
     }
 }
 
-enum check check_for_calibration() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
+bool calibration_needed() { //Das Ergebnis einer eventuell laufenden Messung sollte verworfen werden
     PORTB &= ~(1 << PULLUP_ENABLE_PIN); //Falls gerade eine Messung läuft
     DDRB &= ~(1 << PULLUP_ENABLE_PIN);
     uint8_t calibration_pin_state = PINB & (1 << PULLUP_ENABLE_PIN);
     DDRB |= (1 << PULLUP_ENABLE_PIN);
     if(calibration_pin_state) {
-        return CALIBRATION_NEEDED;
+        return true;
     } else {
-        return NO_CALIBRATION;
+        return false;
     }
 }

@@ -124,7 +124,7 @@ int main(void) {
 		} else {
 			color = GREEN;
 		}
-		if(check_for_calibration() == CALIBRATION_NEEDED) {
+		if(calibration_needed()) { //Batteriewarner aktualisieren
 			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
 			sleep(); //Interrupt wird benötigt
 			set_led(color);
