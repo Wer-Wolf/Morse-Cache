@@ -11,7 +11,7 @@
 
 #include "../lib/wdt.h"
 #include "../lib/eeprom.h"
-#include "../util/adress.h"
+#include "../util/address.h"
 #include "../lib/morse.h"
 
 #define INPUT_PIN PB2 //PCINT2

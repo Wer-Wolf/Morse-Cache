@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../lib/eeprom.h"
-#include "../util/adress.h"
+#include "../util/address.h"
 
 #define END_OF_DATA 0x00
 #define DATA_MIN 0x30 //"0"
