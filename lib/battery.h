@@ -4,18 +4,6 @@
 #include <avr/interrupt.h>
 #include <avr/power.h>
 
-#ifndef ADC_PRESCALER_SELECT_BITS
-    #error ADC_PRESCALER_SELECT_BITS not defined
-    #define ADC_PRESACLER_SELECT_BITS 0 //Übersichtlichere Fehlermeldung
-#endif
-#ifndef PULLUP_ENABLE_PIN
-    #error PULLUP_ENABLE_PIN not defined
-    #define PULLUP_ENABLE_PIN PB4 //Übersichtlichere Fehlermeldung
-#endif
-#ifndef ADC_INPUT_PIN
-    #error ADC_INPUT_PIN not defined
-    #define ADC_INPUT_PIN PB3 //Übersichtlichere Fehlermeldung
-#endif
 #if ADC_INPUT_PIN == PB2
     #define MUX_SELECT_BITS 1
     #define DID_VALUE ADC1D
