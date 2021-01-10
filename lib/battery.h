@@ -7,24 +7,18 @@
 #if ADC_INPUT_PIN == PB2
 	#define MUX_SELECT_BITS 1
 	#define DID_VALUE ADC1D
+#elif ADC_INPUT_PIN == PB3
+	#define MUX_SELECT_BITS 3
+	#define DID_VALUE ADC3D
+#elif ADC_INPUT_PIN == PB4
+	#define MUX_SELECT_BITS 2
+	#define DID_VALUE ADC2D
+#elif ADC_INPUT_PIN == PB5
+	#define MUX_SELECT_BITS 0
+	#define DID_VALUE ADC0D
 #else
-	#if ADC_INPUT_PIN == PB3
-		#define MUX_SELECT_BITS 3
-		#define DID_VALUE ADC3D
-	#else
-		#if ADC_INPUT_PIN == PB4
-			#define MUX_SELECT_BITS 2
-			#define DID_VALUE ADC2D
-		#else
-			#if ADC_INPUT_PIN == PB5
-				#define MUX_SELECT_BITS 0
-				#define DID_VALUE ADC0D
-			#else
-				#error No ADC Input available on selected Pin
-				#define MUX_SELECT_BITS 0 //Übersichtlichere Fehlermeldung
-			#endif
-		#endif
-	#endif
+	#error No ADC Input available on selected Pin
+	#define MUX_SELECT_BITS 0 //Übersichtlichere Fehlermeldung
 #endif
 
 #define battery_is_busy() (ADCSRA & (1 << ADSC)) //Wahr solange Messung läuft
