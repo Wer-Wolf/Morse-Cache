@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
                     int file_content = 0;
                     char byte = 0;
                     int digit_count = 0;
-                    int i = 0;
-                    for(i = 0; i <= MAX_DIGITS; i++) {
+		    int byte_count = 0;
+                    for(byte_count; byte_count <= MAX_DIGITS; byte_count++) {
                         if((file_content = fgetc(file)) == EOF) { //Ende der Datei
                             break;
                         } else {
@@ -59,8 +59,8 @@ int main(int argc, char *argv[]) {
                     }
                     fclose(file);
                     printf("\nNumber of digits: %d\n", digit_count);
-                    if(i > digit_count) {
-                        printf("\nWARNING: The eeprom image contains %d possibly damaged data entrys,\nplease consider creating a new eeprom image with 'write'\n\n", i - digit_count);
+                    if(byte_count > digit_count) {
+                        printf("\nWARNING: The eeprom image contains %d possibly damaged data entrys,\nplease consider creating a new eeprom image with 'write'\n\n", byte_count - digit_count);
                     }
                     printf("Finished\n");
                 }
