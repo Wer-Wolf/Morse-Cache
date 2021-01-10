@@ -119,13 +119,13 @@ int main(void) {
 		set_sleep_mode(SLEEP_MODE_ADC); //ADC benötigt ADC-Sleep
 		battery_start_measuring(); //Benötigt Sleep
 		sleep();
-		if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
+		if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADDRESS)) { //Zu geringe Spannung
 			color = RED;
 		} else {
 			color = GREEN;
 		}
 		if(calibration_needed()) { //Batteriewarner aktualisieren
-			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADRESS, battery_level);
+			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADDRESS, battery_level);
 			sleep(); //Interrupt wird benötigt
 			set_led(color);
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -133,7 +133,7 @@ int main(void) {
 			clear_led(color);
 		} else {
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-			for(uint8_t eeprom_address = DATA_START_ADRESS; eeprom_address <= DATA_END_ADRESS; eeprom_address++) {
+			for(uint8_t eeprom_address = DATA_START_ADDRESS; eeprom_address <= DATA_END_ADDRESS; eeprom_address++) {
 				eeprom_data = eeprom_read(eeprom_address);
 				if(mcusr_mirror) {//MCU wurde zurückgesetzt, EEPROM checken
 					if(is_illegal_data(eeprom_data)) { //Ende oder Fehler
