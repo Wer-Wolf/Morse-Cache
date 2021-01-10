@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "../lib/morse.h"
+#include "../util/address.h"
 
 #define EEPTOOL_VERSION "2.0"
 #define EEPTOOL_LICENSE "GNU General Public License v3.0"
@@ -15,8 +16,8 @@
 #define ACTION argv[1]
 #define FILENAME argv[2]
 #define DATA argv[3]
-#define MAX_DIGITS 61
-#define MAX_DATA_LENGHT 62
+#define MAX_DIGITS (DATA_END_ADDRESS - DATA_START_ADDRESS)
+#define MAX_DATA_LENGHT (MAX_DIGITS + 1)
 
 /*... <FILE> <READ/WRITE> <DATA>*/
 
