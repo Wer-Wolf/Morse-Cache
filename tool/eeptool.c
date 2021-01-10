@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "../lib/morse.h"
+
 #define EEPTOOL_VERSION "2.0"
 #define EEPTOOL_LICENSE "GNU General Public License v3.0"
 #define MORSE_CACHE_WEBSITE "github.com/Wer-Wolf/Morse-Cache"
@@ -15,12 +17,6 @@
 #define DATA argv[3]
 #define MAX_DIGITS 61
 #define MAX_DATA_LENGHT 62
-#define DATA_END 0x00
-
-#define DATA_MIN 0x30 //"0"
-#define DATA_MAX 0x39 //"9"
-
-#define is_illegal_data(data) ((data) > DATA_MAX || (data) < DATA_MIN)
 
 /*... <FILE> <READ/WRITE> <DATA>*/
 
@@ -48,7 +44,7 @@ int main(int argc, char *argv[]) {
                             break;
                         } else {
                             if(is_illegal_data(file_content)) {
-                                if(file_content == DATA_END) {
+                                if(file_content == END_OF_DATA) {
                                     break;
                                 } else {
                                     byte = '?'; //Unknown character
@@ -101,7 +97,7 @@ int main(int argc, char *argv[]) {
                                 printf(".");
                             }
                             for(int i = 0; i < MAX_DATA_LENGHT - length; i++) {
-                                fputc(DATA_END, file);
+                                fputc(END_OF_DATA, file);
                                 printf("_");
                             }
                             printf("\n");
