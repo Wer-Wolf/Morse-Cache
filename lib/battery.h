@@ -44,7 +44,7 @@ void battery_start_measuring() {
 	if(!battery_is_busy()) { //Messung wird nicht unnötig neugestarted
 		power_adc_enable();
 		PORTB |= (1 << PULLUP_ENABLE_PIN);
-		ADCSRA |= (1 << ADEN) | (1 << ADSC);
+		ADCSRA |= (1 << ADEN); //Der ADC startet beim nächsten Sleep
 	}
 }
 

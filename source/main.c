@@ -116,8 +116,8 @@ int main(void) {
 	input_init();
 	wdt_set(MS500);
 	while(1) {
-		battery_start_measuring();
-		set_sleep_mode(SLEEP_MODE_ADC);
+		set_sleep_mode(SLEEP_MODE_ADC); //ADC benötigt ADC-Sleep
+		battery_start_measuring(); //Benötigt Sleep
 		sleep();
 		if(battery_level <= eeprom_read_word(BATTERY_CALIBRATION_LOW_ADRESS)) { //Zu geringe Spannung
 			color = RED;
