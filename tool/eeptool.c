@@ -1,129 +1,157 @@
+#include <argp.h>
 #include <ctype.h>
-#include <string.h>
+#include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../lib/morse.h"
 #include "../util/address.h"
 
-#define EEPTOOL_VERSION "2.0"
-#define EEPTOOL_LICENSE "GNU General Public License v3.0"
-#define MORSE_CACHE_WEBSITE "github.com/Wer-Wolf/Morse-Cache"
-
-#define ARGS_COUNT_READ 3
-#define ARGS_COUNT_WRITE 4
-#define ARGS_COUNT_HELP 2 //Ignored to simplify the usage of the help page
-#define ARGS_COUNT_MIN 2
-#define ACTION argv[1]
-#define FILENAME argv[2]
-#define DATA argv[3]
 #define MAX_DIGITS (DATA_END_ADDRESS - DATA_START_ADDRESS)
-#define MAX_DATA_LENGHT (MAX_DIGITS + 1)
+#define MAX_DATA_LENGTH (MAX_DIGITS + 1)
 
-/*... <FILE> <READ/WRITE> <DATA>*/
+const char *argp_program_version = "Version 3.0 (" __DATE__ " " __TIME__ ")";
+const char *argp_program_bug_address = "www.github.com/Wer-Wolf/Morse-Cache/issues";
 
-int main(int argc, char *argv[]) {
-    if(argc < ARGS_COUNT_MIN) {
-        fprintf(stderr, "ERROR: Too few arguments\nUse 'eeptool help' to learn about possible arguments\n");
-        return 1;
-    } else {
-        if(strcmp(ACTION, "read") == 0) {
-            if(argc == ARGS_COUNT_READ) { //Argumente korrekt
-                FILE *file;
-                file = fopen(FILENAME, "r");
-                if(file == NULL) {
-                    fprintf(stderr, "ERROR: Could not read file '%s'\n", FILENAME);
-                    return 1;
-                } else {
-                    printf("File '%s' sucessfully opened\n", FILENAME);
-                    printf("Content of '%s': ", FILENAME);
-                    int file_content = 0;
-                    char byte = 0;
-                    int digit_count = 0;
-		    int byte_count = 0;
-                    for(byte_count; byte_count <= MAX_DIGITS; byte_count++) {
-                        if((file_content = fgetc(file)) == EOF) { //Ende der Datei
-                            break;
-                        } else {
-                            if(is_illegal_data(file_content)) {
-                                if(file_content == END_OF_DATA) {
-                                    break;
-                                } else {
-                                    byte = '?'; //Unknown character
-                                }
-                            } else {
-                                byte = file_content;
-                                digit_count++;
-                            }
-                            printf("%c", byte);
-                        }
-                    }
-                    fclose(file);
-                    printf("\nNumber of digits: %d\n", digit_count);
-                    if(byte_count > digit_count) {
-                        printf("\nWARNING: The eeprom image contains %d possibly damaged data entrys,\nplease consider creating a new eeprom image with 'write'\n\n", byte_count - digit_count);
-                    }
-                    printf("Finished\n");
-                }
-            } else {
-                fprintf(stderr, "ERROR: Incorrect using of action 'read'\nUsage: eeptool read <file>\n");
-                return 1;
-            }
-        } else {
-            if(strcmp(ACTION, "write") == 0) {
-                if(argc == ARGS_COUNT_WRITE) { //Argumente korrekt
-                    if(strlen(DATA) > MAX_DIGITS) {
-                        fprintf(stderr, "ERROR: Too much numbers, maximum is %d\n", MAX_DIGITS);
-                        return 1;
-                    } else {
-                        int length = strlen(DATA);
-                        for(int i = 0; i < length; i++) {
-                            if(!isdigit(*(DATA + i))) {
-                                fprintf(stderr, "ERROR: Data contains illegal character: %c\n", *(DATA + i));
-                                return 1;
-                            }
-                        }
-                        //Daten sind korrekt
-                        printf("Data sucessfully loaded: %s\nNumber of digits: %d\n", DATA, length);
-                        FILE *file;
-                        file = fopen(FILENAME, "w");
-                        if(file == NULL) {
-                            fprintf(stderr, "ERROR: Could not access file '%s'\n", FILENAME);
-                            return 1;
-                        } else {
-                            printf("Writing data to file '%s'\n", FILENAME);
-                            char digit;
-                            for(int i = 0; i < length; i++) {
-                                digit = *(DATA + i); //Get char
-                                fputc(digit, file);
-                                printf(".");
-                            }
-                            for(int i = 0; i < MAX_DATA_LENGHT - length; i++) {
-                                fputc(END_OF_DATA, file);
-                                printf("_");
-                            }
-                            printf("\n");
-                            fclose(file);
-                            printf("Finished\n");
-                        }
-                    }
-                } else {
-                    fprintf(stderr, "ERROR: Incorrect using of action 'write'\nUsage: eeptool write <file> <data>\n");
-                    return 1;
-                }
-            } else {
-                if(strcmp(ACTION, "help") == 0) {
-                    printf("eeptool version %s build on %s %s \n", EEPTOOL_VERSION, __DATE__, __TIME__);
-                    printf("This programm is is licensed under the %s\n", EEPTOOL_LICENSE);
-                    printf("Visit %s to learn more about the purpose of this programm\n\n", MORSE_CACHE_WEBSITE);
-                    printf("To create a eeprom file containing a sequence of numbers, use\neeptool <write> <file> <data>\n\n");
-                    printf("To extract a sequence of numbers from a eeprom file, use\neeptool <read> <file>\n\n");
-                    printf("To display a simple summary about this programm, use\neeptool help\n");
-                } else {
-                    fprintf(stderr, "ERROR: Unknown action '%s'\nUse 'eeptool help' to learn about possible actions\n", ACTION);
-                    return 1;
-                }
-            }
-        }
-    }
-    return 0;
+struct arguments {
+	enum {WRITE, READ} action;
+	char *numbers;
+	char *filename;
+};
+
+struct argp_option options[] = {
+	{"write", 'w', "numbers", 0, "Convert provided number sequence into a EEPROM image"},
+	{0}
+};
+
+bool is_nummeric(char *string) {
+	size_t number_count = 0;
+	size_t len = strlen(string);
+
+	for(size_t i = 0; i <= len; i++) {
+		if(!isdigit(*(string + i))) {
+			break;
+		} else {
+			number_count++;
+		}
+	}
+	if(number_count != len || len == 0) {
+		return false;
+	} else {
+		return true;
+	}
+}
+			
+
+static int parse_opt(int key, char *arg, struct argp_state *state) {
+	struct arguments *arguments = state->input;
+	
+	switch(key) {
+		case 'w':
+			if(arguments->action == WRITE) { //Nur einmal -w
+				argp_failure(state, 1, 0, "Too many arguments.");
+			} else if (!is_nummeric(arg)) {
+				argp_failure(state, 1, 0, "Only numbers are supported.");
+			} else if (strlen(arg) > MAX_DIGITS) {
+				argp_failure(state, 1, 0, "Too many numbers (max is %d).", MAX_DIGITS);
+			} else {
+				arguments->action = WRITE;
+				arguments->numbers = arg;
+			}
+			break;
+		case ARGP_KEY_ARG:
+			if(state->arg_num >= 1) {
+				//argp_failure (state, 1, 0, "Too many arguments");
+				argp_usage(state);
+			}
+			arguments->filename = arg;
+			break;
+		case ARGP_KEY_END:
+			if(state->arg_num < 1) {
+				//argp_failure (state, 1, 0, "Too few arguments");
+				argp_usage(state);
+			}
+			break;
+		default:
+			return ARGP_ERR_UNKNOWN;
+	}
+	return 0;
+}
+
+void read_from_eeprom(FILE *file) {
+	int digits_count = 0;
+	int unknown_count = 0;
+	bool end_detected = false;
+
+	for(int i = 0; i <= MAX_DATA_LENGTH; i++) {
+		int character = fgetc(file);
+		if(character == EOF) {
+			break;
+		}
+		if(is_illegal_data(character)) {
+			if(character == END_OF_DATA) {
+				end_detected = true;
+				break;
+			} else {
+				printf("?"); //Unbekanntes Zeichen
+				unknown_count++;
+			}
+		} else {
+			printf("%c", character);
+			digits_count++;
+		}
+		}
+	printf("\nDigits: %d\n", digits_count);
+	if(unknown_count > 0) {
+		printf("Damaged: %d\n", unknown_count);
+	}
+	if(end_detected == false) {
+		printf("Limiter missing: true\n");
+	}
+	if(unknown_count || !end_detected) {
+		printf("WARNING: The EEPROM image contains possibly damaged data entrys and/or is missing the limiter.\n");
+		printf("\nPlease consider creating a new EEPROM image.\n");
+	}
+}
+
+void write_to_eeprom(char *content, FILE *file) {
+	int length = strlen(content);
+	
+	for(int i = 0; i < length; i++) {
+		fputc(*(content + i), file);
+		printf(".");
+	}
+	for(int i = 0; i < MAX_DATA_LENGTH - length; i++) {
+		fputc(END_OF_DATA, file);
+		printf("_");
+	}
+	printf("\n");
+}
+
+int main(int argc, char **argv) {
+	struct argp parser = {options, parse_opt, "File", "Read/Create EEPROM images for the Morse-Cache."};
+	struct arguments arguments = {READ, 0, 0};
+	FILE *file = 0;
+
+	if(argp_parse(&parser, argc, argv, 0, 0, &arguments)) {
+		exit(EXIT_FAILURE);
+	}
+	file = fopen(arguments.filename, arguments.action == READ ? "r": "w");
+	if(!file) {
+		perror(arguments.filename);
+		exit(EXIT_FAILURE);
+	}
+	if(arguments.action == READ) {
+		printf("Content of %s: ", arguments.filename);
+		read_from_eeprom(file);
+	} else {
+		printf("Writing data to %s...\n", arguments.filename);
+		write_to_eeprom(arguments.numbers, file);
+	}
+	printf("\nFinished\n");
+	fclose(file);
+
+	exit(EXIT_SUCCESS);
 }
