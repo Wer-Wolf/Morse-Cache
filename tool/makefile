@@ -7,5 +7,5 @@ all: $(TARGET)
 clean:
 	rm -f $(TARGET)
 
-$(TARGET):
+$(TARGET): $(TARGET).c
 	gcc $(TARGET).c -o $(TARGET)
