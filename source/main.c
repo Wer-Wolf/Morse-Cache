@@ -145,11 +145,12 @@ int main(void) {
 						break;
 					}
 				} else { //Morsecode anzeigen
-					if(eeprom_data == END_OF_DATA) { //Ende
-						break;
-					}
-					if(is_illegal_data(eeprom_data)) { //Überspringen bei Fehler
-						continue;
+					if(is_illegal_data(eeprom_data)) {
+						if(eeprom_data == END_OF_DATA) { //Ende
+							break;
+						} else {
+							continue; //Überspringen bei Fehler
+						}
 					}
 					morse_code.value = convert_to_morse(eeprom_data - DATA_OFFSET);
 					wdt_on();
