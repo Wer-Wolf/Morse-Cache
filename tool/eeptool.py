@@ -36,7 +36,7 @@ if args.write is None:
             sys.stdout.write("\n")
             sys.stderr.write("WARNING: Delimiter missing\n")
         print(f"Digits: {digits}")
-        print(f"Damgaged entries: {damaged_entries}")
+        print(f"Damaged entries: {damaged_entries}")
         if damaged_entries > 0 or b"\x00" not in data:
             print("\nWARNING: The EEPROM image is damaged, please consider creating a new EEPROM image")
 elif not args.write.isnumeric():
