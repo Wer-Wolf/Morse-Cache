@@ -4,11 +4,6 @@
 #include <avr/sleep.h>
 #include <util/atomic.h>
 
-#ifndef INPUT_PIN
-    #error INPUT_PIN not defined
-    #define INPUT_PIN PB2 //Übersichtlichere Fehlermeldung
-#endif
-
 #define input_pending() (PCMSK & (1 << INPUT_PIN))
 
 #define input_init() GIMSK |= (1 << PCIE)
