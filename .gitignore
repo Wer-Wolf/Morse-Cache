@@ -3,7 +3,6 @@
 /source/*.elf
 /source/*.hex
 
-/tool/eeptool
 /tool/EEPROM.bin
 #other files
 doc8126.pdf
