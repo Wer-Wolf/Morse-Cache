@@ -3,9 +3,7 @@
 /source/*.elf
 /source/*.hex
 
-/tool/EEPROM.bin
 #other files
+/tool/EEPROM.bin
 doc8126.pdf
-Storie.txt
-/Compilerfehler/*
-/firmware_test/*
+
