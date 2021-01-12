@@ -16,7 +16,7 @@ hex: $(TARGET).hex
 fuse: $(TARGET).elf
 	avr-objdump -s -j .fuse $(TARGET).elf
 
-programm: $(TARGET).elf #avrdude with .elf support (version 6.x) required
+program: $(TARGET).elf #avrdude with .elf support (version 6.x) required
 	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U flash:w:$(TARGET).elf
 	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U lfuse:w:$(TARGET).elf
 	avrdude -c $(AVR_PROGRAMMER) -P $(PORT) -p $(MCU) -u -U hfuse:w:$(TARGET).elf
