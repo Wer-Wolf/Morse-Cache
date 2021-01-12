@@ -1,37 +1,27 @@
 # **eeptool:**
 
-* Read/Create EEPROM files for the Morse-Cache
+* Read/Create EEPROM images for the Morse-Cache
 
-* Creates a binary file for burning into the eeprom of the ATiny13/A
+* Creates a binary for burning into the EEPROM of the ATiny13/A
 
-***The binary provided with the release is compiled and tested for Linux and Windows 10!***
+***You need to have Python 3 installed for running eeptool.py!***
 
 # **Usage:**
 
 * Read a morse-code sequence from a given binary file:
-    ```eeptool read <file>```
+    ```eeptool.py file```
 
 * Write a morse-code sequence to a binary file:
-    ```eeptool write <file> <data>```
+    ```eeptool.py -w NUMBERS file```
         
-    * When finished, upload the binary file to the ATtiny13/A's **eeprom**
+    * When finished, upload the binary file to the ATtiny13/A's **EEPROM**
 
-* Display a simple summary about the eeptool:
-    ```eeptool help```
-
-### **Building from source:**
-
-1. Clone the Git Repository.
-
-2. Type ```cd tool```.
-
-3. Building the binary with **gcc** using ```make all```.
-
-4. Use ```make clean``` to clean up.
+* Display help page:
+    ```eeptool.py --help```
 
 ## **Built with:**
 
-* ```gcc``` - compiler
+* ```argparse``` - argument parsing library
 
 ## **Authors:**
 
