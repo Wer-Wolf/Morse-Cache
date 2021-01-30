@@ -39,14 +39,6 @@ static volatile struct morse_code {
 	bool running;
 } morse_code = {0, false};
 
-struct watchdog {
-	uint8_t counter;
-	struct cycles {
-		uint8_t active;
-		uint8_t idle;
-	} cycles;
-};
-
 static inline void sleep() {
 	sleep_enable();
 	NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
@@ -70,8 +62,9 @@ static inline void morse_code_end() {
 }
 
 ISR(WDT_vect) {
-	static struct watchdog wdt = {0, {0, 0}};
-	if(wdt.counter == 0) {
+	static uint8_t counter = 0, duty_cycle = 0, counter_max = 0;
+
+	if(counter == 0) {
 		if(morse_code.value <= 1) { //Illegale Daten
 			morse_code_end();
 			return;
@@ -79,31 +72,31 @@ ISR(WDT_vect) {
 			morse_code.running = true; //Start
 			//Benötigt einen Durchlauf zum aktualisieren!
 			if(morse_code.value & (1 << 0)) { //dah
-				wdt.cycles.active = DAH;
+				duty_cycle = DAH;
 			} else { //dit
-				wdt.cycles.active = DIT;
+				duty_cycle = DIT;
 			}
 			morse_code.value >>= 1;
 			if(morse_code.value == 1) { //Ende des Buchstabens
-				wdt.cycles.idle = DAH;
+				counter_max = duty_cycle + DAH;
 			} else {
-				wdt.cycles.idle = DIT;
+				counter_max = duty_cycle + DIT;
 			}
 		}
 	} else {
-		if(wdt.counter <= wdt.cycles.active) {
+		if(counter <= duty_cycle) {
 			set_led(color);
 		} else {
 			clear_led(color);
 		}
 	}
-	if(wdt.counter >= wdt.cycles.active + wdt.cycles.idle) { //Periode beendet
-		if(wdt.cycles.idle == DAH) {
+	if(counter >= counter_max) { //Periode beendet
+		if(counter_max - duty_cycle == DAH) {
 			morse_code_end();
 		}
-		wdt.counter = 0;
+		counter = 0;
 	} else {
-		wdt.counter++;
+		counter++;
 	}
 }
 
