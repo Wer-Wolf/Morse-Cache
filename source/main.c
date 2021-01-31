@@ -34,10 +34,7 @@ FUSES = {
 
 static volatile uint8_t color = 0;
 
-static volatile struct morse_code {
-	uint8_t value;
-	bool running;
-} morse_code = {0, false};
+static volatile uint8_t morse_code = 0;
 
 static inline void sleep() {
 	sleep_enable();
@@ -49,14 +46,13 @@ static inline void sleep() {
 
 static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
 	wdt_reset(); //Definierter Ausgangszustand
-	morse_code.value = 0;
+	morse_code = 0;
 	//morse_code.running muss zuvor false sein
 	wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
 	sleep();
 }
 
 static inline void morse_code_end() {
-	morse_code.running = false;
 	wdt_off();
 	wdt_reset(); //Definierter Ausgangszustand
 }
@@ -65,19 +61,18 @@ ISR(WDT_vect) {
 	static uint8_t counter = 0, duty_cycle = 0, counter_max = 0;
 
 	if(counter == 0) {
-		if(morse_code.value <= 1) { //Illegale Daten
+		if(morse_code <= 1) { //Illegale Daten
 			morse_code_end();
 			return;
 		} else {
-			morse_code.running = true; //Start
 			//Benötigt einen Durchlauf zum aktualisieren!
-			if(morse_code.value & (1 << 0)) { //dah
+			if(morse_code & (1 << 0)) { //dah
 				duty_cycle = DAH;
 			} else { //dit
 				duty_cycle = DIT;
 			}
-			morse_code.value >>= 1;
-			if(morse_code.value == 1) { //Ende des Buchstabens
+			morse_code >>= 1;
+			if(morse_code == 1) { //Ende des Buchstabens
 				counter_max = duty_cycle + DAH;
 			} else {
 				counter_max = duty_cycle + DIT;
@@ -143,11 +138,11 @@ int main(void) {
 							continue; //Überspringen bei Fehler
 						}
 					}
-					morse_code.value = convert_to_morse(eeprom_data - DATA_OFFSET);
+					morse_code = convert_to_morse(eeprom_data - DATA_OFFSET);
 					wdt_on();
 					do {
-						sleep(); //morse_code.running aktualisieren
-					} while(morse_code.running != false);
+						sleep();
+					} while(wdt_active());
 				}
 			}
 			mcusr_mirror = 0x00; //Check wird nur einmal durchlaufen

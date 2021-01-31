@@ -10,6 +10,8 @@ enum watchdog_timeout_values {S8 = 33, S4 = 32, S2 = 7, S1 = 6,
 #define wdt_on()  WDTCR |= (1 << WDTIE)
 #define wdt_off() WDTCR &= ~(1 << WDTIE)
 
+#define wdt_active() (WDTCR & (1 << WDTIE))
+
 uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
 
 void wdt_reset_handler(void) __attribute__((naked)) __attribute__((section(".init3")));
