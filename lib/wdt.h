@@ -7,8 +7,8 @@
 enum watchdog_timeout_values {S8 = 33, S4 = 32, S2 = 7, S1 = 6,
 	MS500 = 5, MS250 = 4, MS125 = 3, MS64 = 2, MS32 = 1, MS16 = 0}; //-fshort-enums
 
-#define wdt_on()  WDTCR |= (1 << WDTIE);
-#define wdt_off() WDTCR &= ~(1 << WDTIE);
+#define wdt_on()  WDTCR |= (1 << WDTIE)
+#define wdt_off() WDTCR &= ~(1 << WDTIE)
 
 uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
 
