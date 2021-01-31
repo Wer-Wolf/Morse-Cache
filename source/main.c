@@ -83,20 +83,18 @@ ISR(WDT_vect) {
 				counter_max = duty_cycle + DIT;
 			}
 		}
-	} else {
-		if(counter <= duty_cycle) {
-			set_led(color);
-		} else {
-			clear_led(color);
-		}
 	}
+	if(counter < duty_cycle) {
+		set_led(color);
+	} else {
+		clear_led(color);
+	}
+	counter++;
 	if(counter >= counter_max) { //Periode beendet
 		if(counter_max - duty_cycle == DAH) {
 			morse_code_end();
 		}
 		counter = 0;
-	} else {
-		counter++;
 	}
 }
 
