@@ -47,7 +47,7 @@ static inline void sleep() {
 static inline void wait() { //Abhängig vom Watchdog-Timeout und setzt morse_code auf 0!
 	wdt_reset(); //Definierter Ausgangszustand
 	morse_code = 0;
-	//morse_code.running muss zuvor false sein
+	//wdt_active() muss zuvor false sein
 	wdt_on(); //Beended sich durch morse_code = 0 sofort nach einem Wachtdog-Timeout
 	sleep();
 }
