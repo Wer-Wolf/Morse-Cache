@@ -42,17 +42,17 @@ Make your geocache more interesting with the **Morse-Cache**!. When triggered, i
 
 ### **Adjust the battery warning:**
 
-1. Connect the circuit to a stable voltage source between 2.5V (or whatever the minimal voltage
-   for the green led is) and 5V whose voltage sets the new limit from which the battery is considered *empty*.
+1. Connect the circuit to a stable voltage source between 1.9V and 5V whose voltage sets the new limit from which the battery is considered *empty*.
     
 2. Holding the calibration button while triggering the magnetic switch.
 
 ***If the morse code sequence is displayed, repeat step 2 after the end of the sequence
 (first hold the button, then trigger the magnetic switch)***
 
-3. Release the calibration button when the LED lights up briefly.
+3. Release the calibration button when both LEDs light up briefly.
 
-    * If the LED does not light up briefly, check voltage source and repeat step 2.
+    * If both LEDs remain dark, check voltage source and repeat step 2.
+    * If only the red LED lights up, increase battery warning voltage limit.
 
 ***Releasing the magnetic switch after the LED goes off will display the morse code sequence***
 

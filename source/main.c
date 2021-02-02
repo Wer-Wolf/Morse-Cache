@@ -113,10 +113,10 @@ int main(void) {
 		if(calibration_needed()) { //Batteriewarner aktualisieren
 			eeprom_write_word(BATTERY_CALIBRATION_LOW_ADDRESS, battery_level);
 			sleep(); //Interrupt wird benötigt
-			set_led(color);
+			set_led(BOTH);
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 			wait();
-			clear_led(color);
+			clear_led(BOTH);
 		} else {
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 			for(uint8_t eeprom_address = DATA_START_ADDRESS; eeprom_address <= DATA_END_ADDRESS; eeprom_address++) {
